@@ -1,0 +1,43 @@
+import React from "react";
+import { InteractionInfo, RowType, StyledInteractionContainer } from "./style";
+import { InteractionContainerProps } from "../../interfaces";
+import PropTypes from "prop-types";
+import {InteractionPart } from "../InteractionPart"
+
+/**
+ * Inputs Container component
+ */
+export const InteractionContainer: React.FC<InteractionContainerProps> = (
+  props
+) => {
+  console.log(props.interactionParts);
+
+  let interactionPartElements = (<></>);
+  
+  if (props.interactionParts == undefined) {
+    console.log("no observations");
+  } else {
+    interactionPartElements = props.interactionParts.map((part, i) => (
+      <InteractionPart key={"interaction-part-" + i.toString()} interactions={part}></InteractionPart>
+    ));
+  }
+
+  return (
+    <StyledInteractionContainer>
+      <InteractionInfo>
+        <tbody>
+          <RowType><td>Initiator</td></RowType>
+          <RowType style={{height: '20px'}}><td>Technology</td></RowType>
+          <RowType><td>Receiver</td></RowType>
+          <RowType style={{minHeight: '20px'}}><td>Duration (sec)</td></RowType>
+          <RowType><td>Conversation</td></RowType>
+        </tbody>
+      </InteractionInfo>
+      {interactionPartElements}
+    </StyledInteractionContainer>
+  );
+};
+
+InteractionContainer.propTypes = {
+  interactionParts: PropTypes.any,
+};
