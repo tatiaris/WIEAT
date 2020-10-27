@@ -1,4 +1,4 @@
-Front-end for the TaughtPotato website
+Front-end for the WIEAT website
 
 ## Getting Started
 
