@@ -38,6 +38,26 @@ export const InputContainer: React.FC<InputProps> = (props) => {
       });
   };
 
+  const handleColorUpdate = (event) => {
+    props.colorUpdateFunc(event.target.name, event.target.value);
+  }
+
+  const handleDownload = (event) => {
+    event.preventDefault();
+  }
+
+  let colorInputs = [(<></>)];
+  if (props.colorDict == undefined) {
+    console.log("no colors");
+  } else {
+    colorInputs = (Object.keys(props.colorDict.colors)).map((key, i) => (
+      <>
+        <label key={"color-label-" + i}>{key + ': '}</label>
+        <input key={"color-input-" + i.toString()} onChange={handleColorUpdate} type="color" name={key} value={props.colorDict.colors[key]}/>
+      </>
+    ));
+  }
+
   return (
     <InpsContainer>
       <input
@@ -46,16 +66,20 @@ export const InputContainer: React.FC<InputProps> = (props) => {
         id="data_file"
         name="data_file"
       />
-      <button id="download-poster-btn">Download</button>
+      <button id="download-poster-btn" onClick={handleDownload}>Download</button>
       <br></br>
       <span>Sample files: </span>
-      <a href="./files/sample.csv">csv</a>,{" "}
-      <a href="./files/sample.yaml">yaml</a>,{" "}
-      <a href="./files/sample.json">json</a>
+      <a href="/files/sample.csv">csv</a>,{" "}
+      <a href="/files/sample.yaml">yaml</a>,{" "}
+      <a href="/files/sample.json">json</a>
+      <br/>
+      {colorInputs}
     </InpsContainer>
   );
 };
 
 InputContainer.propTypes = {
   visualizeFunc: PropTypes.any,
+  colorUpdateFunc: PropTypes.any,
+  colorDict: PropTypes.any
 };

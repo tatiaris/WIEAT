@@ -6,8 +6,7 @@ const Faq = (): React.ReactNode => {
   return (
     <>
         <Mheader title={"FAQ"}></Mheader>
-        <Mnavbar theme={"light"}></Mnavbar>
-        WIEAT FAQ
+        <Mnavbar theme={"dark"}></Mnavbar>
     </>
   );
 };

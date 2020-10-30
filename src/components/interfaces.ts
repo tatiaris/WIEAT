@@ -17,23 +17,30 @@ export interface MnavbarProps {
 
 export interface PosterProps {
   content: any;
+  colorDict: any;
 }
 
 export interface InputProps {
   visualizeFunc: any;
+  colorUpdateFunc: any;
+  colorDict: any;
 }
 
 export interface EpisodeProps {
   content: any;
+  colorDict: any;
 }
 
 export interface InteractionContainerProps {
   interactionParts: any;
+  colorDict: any;
 }
 
 export interface InteractionPartProps {
   interactions: any;
+  colorDict: any;
 }
 export interface InteractionProps {
   details: any;
+  colorDict: any;
 }

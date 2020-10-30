@@ -8,11 +8,10 @@ import { InteractionContainer } from "../InteractionContainer";
  * Inputs Container component
  */
 export const Episode: React.FC<EpisodeProps> = (props) => {
-
   return (
     <StyledEpisode>
       <EpisodeTitle>{props.content.title}</EpisodeTitle>
-      <InteractionContainer interactionParts={props.content.episode_parts}></InteractionContainer>
+      <InteractionContainer colorDict={props.colorDict} interactionParts={props.content.episode_parts}></InteractionContainer>
     </StyledEpisode>
   );
 };

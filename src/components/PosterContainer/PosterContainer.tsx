@@ -14,7 +14,7 @@ export const PosterContainer: React.FC<PosterProps> = (props) => {
     console.log("no observations");
   } else {
     episodes = props.content.observations.map((observation, i) => (
-      <Episode key={"episode-" + i.toString()} content={observation}></Episode>
+      <Episode colorUpdateFunc={props.colorUpdateFunc} colorDict={props.colorDict} key={"episode-" + i.toString()} content={observation}></Episode>
     ));
   }
 
@@ -23,4 +23,5 @@ export const PosterContainer: React.FC<PosterProps> = (props) => {
 
 PosterContainer.propTypes = {
   content: PropTypes.any,
+  colorDict: PropTypes.any
 };

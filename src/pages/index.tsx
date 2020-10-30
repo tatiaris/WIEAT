@@ -6,8 +6,7 @@ const Home = (): React.ReactNode => {
   return (
     <>
         <Mheader title={"Home"}></Mheader>
-        <Mnavbar theme={"light"}></Mnavbar>
-        Home Page
+        <Mnavbar theme={"dark"}></Mnavbar>
     </>
   );
 };

@@ -10,15 +10,13 @@ import {InteractionPart } from "../InteractionPart"
 export const InteractionContainer: React.FC<InteractionContainerProps> = (
   props
 ) => {
-  console.log(props.interactionParts);
-
   let interactionPartElements = (<></>);
   
   if (props.interactionParts == undefined) {
     console.log("no observations");
   } else {
     interactionPartElements = props.interactionParts.map((part, i) => (
-      <InteractionPart key={"interaction-part-" + i.toString()} interactions={part}></InteractionPart>
+      <InteractionPart colorDict={props.colorDict} key={"interaction-part-" + i.toString()} interactions={part}></InteractionPart>
     ));
   }
 

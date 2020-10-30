@@ -6,8 +6,7 @@ const AnalyzePage = (): React.ReactNode => {
   return (
     <>
         <Mheader title={"FAQ"}></Mheader>
-        <Mnavbar theme={"light"}></Mnavbar>
-        WIEAT Analyze
+        <Mnavbar theme={"dark"}></Mnavbar>
     </>
   );
 };

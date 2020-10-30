@@ -6,8 +6,7 @@ const Contact = (): React.ReactNode => {
   return (
     <>
         <Mheader title={"Contact"}></Mheader>
-        <Mnavbar theme={"light"}></Mnavbar>
-        Contact Us
+        <Mnavbar theme={"dark"}></Mnavbar>
     </>
   );
 };

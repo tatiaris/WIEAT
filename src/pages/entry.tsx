@@ -6,8 +6,7 @@ const EntryPage = (): React.ReactNode => {
   return (
     <>
         <Mheader title={"FAQ"}></Mheader>
-        <Mnavbar theme={"light"}></Mnavbar>
-        WIEAT Entry
+        <Mnavbar theme={"dark"}></Mnavbar>
     </>
   );
 };
