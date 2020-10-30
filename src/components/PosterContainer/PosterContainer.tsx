@@ -14,7 +14,7 @@ export const PosterContainer: React.FC<PosterProps> = (props) => {
     console.log("no observations");
   } else {
     episodes = props.content.observations.map((observation, i) => (
-      <Episode colorUpdateFunc={props.colorUpdateFunc} colorDict={props.colorDict} key={"episode-" + i.toString()} content={observation}></Episode>
+      <Episode colorDict={props.colorDict} key={"episode-" + i} content={observation}></Episode>
     ));
   }
 

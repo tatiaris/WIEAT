@@ -53,7 +53,7 @@ export const InputContainer: React.FC<InputProps> = (props) => {
     colorInputs = (Object.keys(props.colorDict.colors)).map((key, i) => (
       <>
         <label key={"color-label-" + i}>{key + ': '}</label>
-        <input key={"color-input-" + i.toString()} onChange={handleColorUpdate} type="color" name={key} value={props.colorDict.colors[key]}/>
+        <input key={"color-input-" + i} onChange={handleColorUpdate} type="color" name={key} value={props.colorDict.colors[key]}/>
       </>
     ));
   }

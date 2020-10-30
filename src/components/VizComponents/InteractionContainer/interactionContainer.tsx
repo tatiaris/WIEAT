@@ -16,7 +16,7 @@ export const InteractionContainer: React.FC<InteractionContainerProps> = (
     console.log("no observations");
   } else {
     interactionPartElements = props.interactionParts.map((part, i) => (
-      <InteractionPart colorDict={props.colorDict} key={"interaction-part-" + i.toString()} interactions={part}></InteractionPart>
+      <InteractionPart colorDict={props.colorDict} key={"interaction-part-" + i} interactions={part}></InteractionPart>
     ));
   }
 

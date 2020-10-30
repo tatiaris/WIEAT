@@ -24,7 +24,7 @@ export const InteractionPart: React.FC<InteractionPartProps> = (props) => {
       (interaction_details, i) => (
         <Interaction
           colorDict={props.colorDict}
-          key={"interaction-" + i.toString()}
+          key={"interaction-" + i}
           details={interaction_details}
         ></Interaction>
       )

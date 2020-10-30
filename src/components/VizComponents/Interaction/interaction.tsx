@@ -17,7 +17,7 @@ export const Interaction: React.FC<InteractionProps> = (props) => {
   const convo_length = props.details.conversation.length;
 
   if (convo_length > 50 && convo_length < 300) {
-    dynamicWidth = { minWidth: convo_length.toString() + "px" };
+    dynamicWidth = { minWidth: convo_length + "px" };
   }
   if (convo_length >= 300 || props.details.initiator.length >= 20) {
     dynamicWidth = { width: "250px" };
