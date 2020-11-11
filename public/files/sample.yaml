@@ -53,7 +53,7 @@ observations:
             technology: PF
             receiver: I&IL
             duration: 2
-            conversation: '"Yeah, sowho did you need me to drop that off to?"'
+            conversation: '"Yeah, so who did you need me to drop that off to?"'
           - initiator: I&IL
             technology: PF
             receiver: I&I2

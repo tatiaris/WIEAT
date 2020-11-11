@@ -2,6 +2,7 @@ import React from "react";
 import { InpsContainer } from "./style";
 import { InputProps } from "../interfaces";
 import PropTypes from "prop-types";
+import { Form, Button, Col, Row } from "react-bootstrap";
 
 /**
  * Inputs Container component
@@ -52,28 +53,36 @@ export const InputContainer: React.FC<InputProps> = (props) => {
   } else {
     colorInputs = (Object.keys(props.colorDict.colors)).map((key, i) => (
       <>
-        <label key={"color-label-" + i}>{key + ': '}</label>
-        <input key={"color-input-" + i} onChange={handleColorUpdate} type="color" name={key} value={props.colorDict.colors[key]}/>
+        <Form.Label column key={"color-label-" + i}>{key + ': '}</Form.Label>
+        <Col>
+          <input key={"color-input-" + i} onChange={handleColorUpdate} type="color" name={key} defaultValue={props.colorDict.colors[key]}/>
+        </Col>
       </>
     ));
   }
 
   return (
     <InpsContainer>
-      <input
-        onChange={handleFileChange}
-        type="file"
-        id="data_file"
-        name="data_file"
-      />
-      <button id="download-poster-btn" onClick={handleDownload}>Download</button>
-      <br></br>
-      <span>Sample files: </span>
-      <a href="/files/sample.csv">csv</a>,{" "}
-      <a href="/files/sample.yaml">yaml</a>,{" "}
-      <a href="/files/sample.json">json</a>
-      <br/>
-      {colorInputs}
+      <Form>
+        <Form.Group as={Row}>
+          <Form.Label column sm="1">Episode File:</Form.Label>
+          <Col sm="10">
+            <Form.File onChange={handleFileChange} id="exampleFormControlFile1" />
+          </Col>
+          <Col sm="1">
+            <Button onClick={handleDownload} variant="primary" type="submit">Download</Button>
+          </Col>
+        </Form.Group>
+        <span>Sample files: </span>
+        <a href="/files/sample.csv">csv</a>,{" "}
+        <a href="/files/sample.yaml">yaml</a>,{" "}
+        <a href="/files/sample.json">json</a>
+        <br/>
+        <Form.Group as={Row}>{colorInputs}</Form.Group>
+      </Form>
+
+      
+      
     </InpsContainer>
   );
 };
