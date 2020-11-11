@@ -14,7 +14,6 @@ const VisualizePage = (): React.ReactNode => {
   const [episode, setEpisode] = useState('undetermined');
 
   const visualize_data = (data) => {
-    console.log("visualizing: ", data);
     setParticipantColors(generateColorDict(data))
     setCopyParticipantColors(generateColorDict(data))
     setContent(data);
