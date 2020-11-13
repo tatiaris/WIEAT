@@ -72,7 +72,7 @@ const EntryPage = (): React.ReactNode => {
           <Form.Row>
             <Form.Group as={Col}>
               <Form.Label>Initiator</Form.Label>
-              <Form.Control name="initiator" defaultValue={initiatorValue} onChange={e => setInitiatorValue(e.target.value)} as="select" required ref={register({
+              <Form.Control name="initiator" defaultValue={initiatorValue} onChange={e => setInitiatorValue(e.target.value)} as="select" ref={register({
                 required: "Required",
                 validate: value => value !== receiverValue || "cannot be the same as receiver"
               })}>
@@ -85,7 +85,7 @@ const EntryPage = (): React.ReactNode => {
             </Form.Group>
             <Form.Group as={Col}>
               <Form.Label>Receiver</Form.Label>
-              <Form.Control name="receiver" defaultValue={receiverValue} onChange={e => setReceiverValue(e.target.value)} as="select" required ref={register({
+              <Form.Control name="receiver" defaultValue={receiverValue} onChange={e => setReceiverValue(e.target.value)} as="select" ref={register({
                 required: "Required",
                 validate: value => value !== initiatorValue || "cannot be the same as initiator"
               })}>
@@ -98,7 +98,7 @@ const EntryPage = (): React.ReactNode => {
             </Form.Group>
             <Form.Group as={Col}>
               <Form.Label>Technology</Form.Label>
-              <Form.Control name="technology" ref={register} as="select" required>
+              <Form.Control name="technology" ref={register({ required: "Required" })} as="select">
                 <option>CO</option>
                 <option>FF</option>
                 <option>PF</option>
@@ -108,7 +108,7 @@ const EntryPage = (): React.ReactNode => {
           </Form.Row>
           <Form.Group>
             <Form.Label>Conversation</Form.Label>
-            <Form.Control name="conversation" type="text" placeholder='ex: "hi, how are you?" "Great! How about you?"' required  ref={register({
+            <Form.Control name="conversation" type="text" placeholder='ex: "hi, how are you?" "Great! How about you?"'  ref={register({
               required: "Required",
               pattern: {
                 value: /^("[^"]+")( "[^"]+")*$/g,
@@ -119,7 +119,7 @@ const EntryPage = (): React.ReactNode => {
           </Form.Group>
           <Form.Group>
             <Form.Label>Sub-episode</Form.Label>
-            <Form.Control name="sub_episode" ref={register} type="text" placeholder='ex: Start of Meeting' required />
+            <Form.Control name="sub_episode" ref={register({ required: "Required" })} type="text" placeholder='ex: Start of Meeting' />
           </Form.Group>
           <Form.Group>
             <Form.Label>Episode (optional)</Form.Label>
