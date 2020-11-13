@@ -7,11 +7,13 @@ import { useForm } from "react-hook-form";
 import { InputErrMsg } from "../components/InputErrMsg";
 
 const EntryPage = (): React.ReactNode => {
+  const defaultInitiatorValue = '--- select initiator ---';
+  const defaultReceiverValue = '--- select receiver ---';
   const [startTime, setStartTime] = useState('21:04:23');
   const [endTime, setEndTime] = useState('21:04:27');
   const [duration, setDuration] = useState(0);
-  const [initiatorValue, setInitiatorValue] = useState('I&IL');
-  const [receiverValue, setReceiverValue] = useState('Inst2');
+  const [initiatorValue, setInitiatorValue] = useState(defaultInitiatorValue);
+  const [receiverValue, setReceiverValue] = useState(defaultReceiverValue);
 
   const addInteraction = async (interactionData) => {
     const res = await fetch('/api/interactions', {
@@ -74,8 +76,9 @@ const EntryPage = (): React.ReactNode => {
               <Form.Label>Initiator</Form.Label>
               <Form.Control name="initiator" defaultValue={initiatorValue} onChange={e => setInitiatorValue(e.target.value)} as="select" ref={register({
                 required: "Required",
-                validate: value => value !== receiverValue || "cannot be the same as receiver"
+                validate: value => (value !== receiverValue && value !== defaultInitiatorValue) || "please choose a valid initiator"
               })}>
+                <option>{defaultInitiatorValue}</option>
                 <option>Field Observer (FOB)</option>
                 <option>I&I2</option>
                 <option>I&IL</option>
@@ -87,8 +90,9 @@ const EntryPage = (): React.ReactNode => {
               <Form.Label>Receiver</Form.Label>
               <Form.Control name="receiver" defaultValue={receiverValue} onChange={e => setReceiverValue(e.target.value)} as="select" ref={register({
                 required: "Required",
-                validate: value => value !== initiatorValue || "cannot be the same as initiator"
+                validate: value => (value !== initiatorValue && value !== defaultReceiverValue) || "please choose a valid receiver"
               })}>
+              <option>{defaultReceiverValue}</option>
                 <option>Field Observer (FOB)</option>
                 <option>I&I2</option>
                 <option>I&IL</option>
@@ -120,6 +124,7 @@ const EntryPage = (): React.ReactNode => {
           <Form.Group>
             <Form.Label>Sub-episode</Form.Label>
             <Form.Control name="sub_episode" ref={register({ required: "Required" })} type="text" placeholder='ex: Start of Meeting' />
+            <InputErrMsg message={errors.sub_episode && errors.sub_episode.message}></InputErrMsg>
           </Form.Group>
           <Form.Group>
             <Form.Label>Episode (optional)</Form.Label>
