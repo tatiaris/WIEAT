@@ -27,14 +27,14 @@ const VisualizePage = (): React.ReactNode => {
     for (let k = 0; k < json.length; k++) {
       let found = false;
       for (let i = 0; i < episode_parts.length; i++) {
-        if (episode_parts[i].label == json[k].topic) {
+        if (episode_parts[i].label == json[k].sub_episode) {
           found = true
           episode_parts[i].interactions.push(json[k])
         }
       }
       if (!found) {
         episode_parts.push({
-          "label": json[k].topic,
+          "label": json[k].sub_episode,
           "interactions": [
             json[k]
           ]
@@ -63,7 +63,6 @@ const VisualizePage = (): React.ReactNode => {
     if (data == {}) return {colors: {}}
     if (data == null) return {colors: {}}
     let colorDict = {};
-    console.log(data)
     if (data["observations"]) {
       for (let k = 0; k < data["observations"].length; k++) {
         let episode = data["observations"][k];
@@ -93,7 +92,6 @@ const VisualizePage = (): React.ReactNode => {
   );
 
   const handleColorChange = (clabel, newColor) => {
-    console.log("updating", clabel, "to", newColor);
     let newParticipantColors = {colors: {}};
     for (let p in participantColors.colors) {
       if (p == clabel) {

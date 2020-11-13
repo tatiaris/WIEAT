@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { Mheader } from "../components/Mheader/";
 import { Mnavbar } from "../components/Mnavbar/";
 import { Form, Button, Col } from "react-bootstrap";
+import moment from 'moment';
+import { useForm } from "react-hook-form";
+import { InputErrMsg } from "../components/InputErrMsg";
 
 const EntryPage = (): React.ReactNode => {
-  const [startTime, setStartTime] = useState('11:04');
-  const [duration, setDuration] = useState(4);
-  const [initiator, setInitiator] = useState('Inst2');
-  const [technology, setTechnology] = useState('TP');
-  const [receiver, setReceiver] = useState('I&IL');
-  const [conversation, setConversation] = useState('"hi, how are you?" "Great! How about you?"');
-  const [topic, setTopic] = useState('Dissemination - copying documents to distribute');
-  const [episode, setEpisode] = useState('undetermined');
+  const [startTime, setStartTime] = useState('21:04:23');
+  const [endTime, setEndTime] = useState('21:04:27');
+  const [duration, setDuration] = useState(0);
+  const [initiatorValue, setInitiatorValue] = useState('I&IL');
+  const [receiverValue, setReceiverValue] = useState('Inst2');
 
   const addInteraction = async (interactionData) => {
     const res = await fetch('/api/interactions', {
@@ -20,22 +20,16 @@ const EntryPage = (): React.ReactNode => {
     })
   }
 
-  const handleInteractionFormSubmit = (event) => {
-    const form = event.currentTarget;
-    event.preventDefault();
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
-    }
-    addInteraction({
-      start_time: startTime,
-      duration: duration,
-      initiator: initiator,
-      technology: technology,
-      receiver: receiver,
-      conversation: conversation,
-      topic: topic,
-      episode: episode
-    });
+  const isValidTime = (timeStr) => {
+    const time = moment(timeStr, 'HH:MM:SS');
+    return time.isValid();
+  }
+
+  const { handleSubmit, register, errors } = useForm();
+
+  const onInteractionFormSubmit = (data) => {
+    data.duration = parseInt(data.duration);
+    addInteraction(data);
   }
 
   return (
@@ -44,42 +38,92 @@ const EntryPage = (): React.ReactNode => {
       <Mnavbar theme={"dark"}></Mnavbar>
       <Col style={{marginTop: "1em"}}>
         <h3>Interaction Entry:</h3>
-        <Form onSubmit={handleInteractionFormSubmit}>
+        <Form onSubmit={handleSubmit(onInteractionFormSubmit)}>
           <Form.Row>
             <Form.Group as={Col}>
-              <Form.Label>Start Time</Form.Label>
-              <Form.Control onChange={e => setStartTime(e.target.value)} type="time" placeholder="ex: 11:04 AM" required defaultValue={startTime} />
+              <Form.Label>Start Time 24Hr (HH:MM:SS)</Form.Label>
+              <Form.Control name="start_time" onChange={e => setStartTime(e.target.value)} placeholder="ex: 21:04:23" ref={register({
+                required: "Required",
+                pattern: {
+                  value: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/,
+                  message: "invalid start time"
+                },
+                validate: value => value !== endTime
+              })}/>
+              <InputErrMsg message={errors.start_time && errors.start_time.message}></InputErrMsg>
+            </Form.Group>
+            <Form.Group as={Col}>
+              <Form.Label>End Time 24Hr (HH:MM:SS)</Form.Label>
+              <Form.Control name="end_time" onChange={e => setEndTime(e.target.value)} placeholder="ex: 21:04:27" ref={register({
+                required: "Required",
+                pattern: {
+                  value: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/,
+                  message: "invalid end time"
+                },
+                validate: value => value !== startTime || "cannot be the same as start time"
+              })}/>
+              <InputErrMsg message={errors.end_time && errors.end_time.message}></InputErrMsg>
             </Form.Group>
             <Form.Group as={Col}>
               <Form.Label>Duration (sec)</Form.Label>
-              <Form.Control onChange={e => setDuration(parseInt(e.target.value))} type="number" placeholder="ex: 4" required defaultValue={duration} />
+              <Form.Control name="duration" ref={register} plaintext placeholder="ex: 4" readOnly value={duration} />
             </Form.Group>
           </Form.Row>
           <Form.Row>
             <Form.Group as={Col}>
               <Form.Label>Initiator</Form.Label>
-              <Form.Control onChange={e => setInitiator(e.target.value)} type="text" placeholder="ex: Inst2" required defaultValue={initiator} />
-            </Form.Group>
-            <Form.Group as={Col}>
-              <Form.Label>Technology</Form.Label>
-              <Form.Control onChange={e => setTechnology(e.target.value)} type="text" placeholder="ex: TP" required defaultValue={technology} />
+              <Form.Control name="initiator" defaultValue={initiatorValue} onChange={e => setInitiatorValue(e.target.value)} as="select" required ref={register({
+                required: "Required",
+                validate: value => value !== receiverValue || "cannot be the same as receiver"
+              })}>
+                <option>Field Observer (FOB)</option>
+                <option>I&I2</option>
+                <option>I&IL</option>
+                <option>Inst2</option>
+              </Form.Control>
+              <InputErrMsg message={errors.initiator && errors.initiator.message}></InputErrMsg>
             </Form.Group>
             <Form.Group as={Col}>
               <Form.Label>Receiver</Form.Label>
-              <Form.Control onChange={e => setReceiver(e.target.value)} type="text" placeholder="ex: I&IL" required  defaultValue={receiver} />
+              <Form.Control name="receiver" defaultValue={receiverValue} onChange={e => setReceiverValue(e.target.value)} as="select" required ref={register({
+                required: "Required",
+                validate: value => value !== initiatorValue || "cannot be the same as initiator"
+              })}>
+                <option>Field Observer (FOB)</option>
+                <option>I&I2</option>
+                <option>I&IL</option>
+                <option>Inst2</option>
+              </Form.Control>
+              <InputErrMsg message={errors.receiver && errors.receiver.message}></InputErrMsg>
+            </Form.Group>
+            <Form.Group as={Col}>
+              <Form.Label>Technology</Form.Label>
+              <Form.Control name="technology" ref={register} as="select" required>
+                <option>CO</option>
+                <option>FF</option>
+                <option>PF</option>
+                <option>TP</option>
+              </Form.Control>
             </Form.Group>
           </Form.Row>
           <Form.Group>
             <Form.Label>Conversation</Form.Label>
-            <Form.Control onChange={e => setConversation(e.target.value)} type="text" placeholder='ex: "hi, how are you?" "Great! How about you?"' required defaultValue={conversation} />
+            <Form.Control name="conversation" type="text" placeholder='ex: "hi, how are you?" "Great! How about you?"' required  ref={register({
+              required: "Required",
+              pattern: {
+                value: /^("[^"]+")( "[^"]+")*$/g,
+                message: "invalid conversation format (check for spaces)"
+              }
+            })}/>
+            <InputErrMsg message={errors.conversation && errors.conversation.message}></InputErrMsg>
           </Form.Group>
           <Form.Group>
-            <Form.Label>Topic</Form.Label>
-            <Form.Control onChange={e => setTopic(e.target.value)} type="text" placeholder='ex: Dissemination - copying documents to distribute' required defaultValue={topic} />
+            <Form.Label>Sub-episode</Form.Label>
+            <Form.Control name="sub_episode" ref={register} type="text" placeholder='ex: Start of Meeting' required />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Episode</Form.Label>
-            <Form.Control onChange={e => setEpisode(e.target.value)} type="text" placeholder='ex: Initial Field Report - 1st Observation' defaultValue={episode} />
+            <Form.Label>Episode (optional)</Form.Label>
+            <Form.Control name="episode" ref={register} type="text" placeholder='ex: Final Product Meeting' />
           </Form.Group>
           <Button variant="primary" type="submit">
             Submit

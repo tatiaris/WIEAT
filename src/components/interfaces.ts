@@ -44,3 +44,6 @@ export interface InteractionProps {
   details: any;
   colorDict: any;
 }
+export interface InputErrMsgProps {
+  message: string;
+}

@@ -10,9 +10,7 @@ import { Episode } from "../VizComponents/Episode";
 export const PosterContainer: React.FC<PosterProps> = (props) => {
   let episodes = (<></>);
 
-  if (props.content.observations == undefined) {
-    console.log("no observations");
-  } else {
+  if (props.content.observations != undefined) {
     episodes = props.content.observations.map((observation, i) => (
       <Episode colorDict={props.colorDict} key={"episode-" + i} content={observation}></Episode>
     ));
