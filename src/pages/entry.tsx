@@ -252,11 +252,11 @@ const EntryPage = (): React.ReactNode => {
           <Form onSubmit={handleParticipantSubmit(onParticipantFormSubmit)}>
             <Form.Group>
               <Form.Label>Full Name</Form.Label>
-              <Form.Control name="full_name" ref={registerParticipant} type="text" placeholder='ex: Field Observer' />
+              <Form.Control name="full_name" ref={registerParticipant({ required: "Required" })} type="text" placeholder='ex: Field Observer' />
             </Form.Group>
             <Form.Group>
               <Form.Label>Abbreviation</Form.Label>
-              <Form.Control name="name" ref={registerParticipant} type="text" placeholder='ex: FOB' />
+              <Form.Control name="name" ref={registerParticipant({ required: "Required" })} type="text" placeholder='ex: FOB' />
             </Form.Group>
             <Form.Group>
               <Form.Label>Color</Form.Label>
@@ -272,11 +272,11 @@ const EntryPage = (): React.ReactNode => {
           <Form onSubmit={handleTechnologySubmit(onTechnologyFormSubmit)}>
             <Form.Group>
               <Form.Label>Full Name</Form.Label>
-              <Form.Control name="full_name" ref={registerTechnology} type="text" placeholder='ex: Face to Face' />
+              <Form.Control name="full_name" ref={registerTechnology({ required: "Required" })} type="text" placeholder='ex: Face to Face' />
             </Form.Group>
             <Form.Group>
               <Form.Label>Abbreviation</Form.Label>
-              <Form.Control name="name" ref={registerTechnology} type="text" placeholder='ex: FF' />
+              <Form.Control name="name" ref={registerTechnology({ required: "Required" })} type="text" placeholder='ex: FF' />
             </Form.Group>
             <Form.Group>
               <Form.Label>Color</Form.Label>
