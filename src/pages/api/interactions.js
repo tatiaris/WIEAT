@@ -23,9 +23,15 @@ handler.get(async (req, res) => {
 handler.post(async (req, res) => {
   let data = req.body;
   data = JSON.parse(data);
-  let doc = await req.db.collection("interaction_collection").insertOne(data);
-  console.log("inserted data", data);
-  res.json({ message: "ok" });
+
+  if (data.episode != "testing"){
+    let doc = await req.db.collection("interaction_collection").insertOne(data);
+    console.log("inserted data", data);
+  }
+  res.json({
+    message: "success",
+    data: data
+  });
 });
 
 export default handler;

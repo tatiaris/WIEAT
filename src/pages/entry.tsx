@@ -1,30 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Mheader } from "../components/Mheader/";
 import { Mnavbar } from "../components/Mnavbar/";
-import { Form, Button, Col } from "react-bootstrap";
-import moment from 'moment';
+import { Form, Button, Col, Toast } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { InputErrMsg } from "../components/InputErrMsg";
 
 const EntryPage = (): React.ReactNode => {
   const defaultInitiatorValue = '--- select initiator ---';
   const defaultReceiverValue = '--- select receiver ---';
-  const [startTime, setStartTime] = useState('21:04:23');
-  const [endTime, setEndTime] = useState('21:04:27');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [duration, setDuration] = useState(0);
   const [initiatorValue, setInitiatorValue] = useState(defaultInitiatorValue);
   const [receiverValue, setReceiverValue] = useState(defaultReceiverValue);
+  const [showNotif, setShowNotif] = useState(true);
+  const toggleShowNotif = () => setShowNotif(!showNotif);
+  const [toastBody, setToastBody] = useState('no body')
 
   const addInteraction = async (interactionData) => {
     const res = await fetch('/api/interactions', {
       method: 'post',
       body: JSON.stringify(interactionData)
-    })
+    }).then (
+      response => response.json()
+    ).catch((e) => {});
+
+    if (res.message == "success") {
+      console.log('interaction added', res.data)
+      setToastBody(`${res.data.initiator} => ${res.data.receiver} (${res.data.technology})`)
+      setShowNotif(true)
+    } else {
+      console.log('interaction could not be added')
+    }
   }
 
   const isValidTime = (timeStr) => {
-    const time = moment(timeStr, 'HH:MM:SS');
-    return time.isValid();
+    let regex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/
+    return regex.test(timeStr)
   }
 
   const { handleSubmit, register, errors } = useForm();
@@ -34,10 +46,41 @@ const EntryPage = (): React.ReactNode => {
     addInteraction(data);
   }
 
+  const getSeconds = (t) => {
+    console.log(t)
+    return t[2] + t[1]*60 + t[0]*3600
+  }
+
+  useEffect(() => {
+    if (isValidTime(startTime) && isValidTime(endTime)) {
+      const stp = (startTime.split(':')).map(x=>+x)
+      const etp = endTime.split(':').map(x=>+x)
+      let startSecs = getSeconds(stp)
+      let endSecs = getSeconds(etp)
+      if (startSecs > endSecs) {
+        endSecs += 86400;
+      }
+      setDuration(endSecs - startSecs)
+    }
+  }, [startTime, endTime]);
+
   return (
     <>
       <Mheader title={"FAQ"}></Mheader>
       <Mnavbar theme={"dark"}></Mnavbar>
+      <Toast show={showNotif} onClose={toggleShowNotif} style={{
+        position: 'absolute',
+        bottom: 25,
+        right: 25,
+        background: '#7fe897'
+      }} delay={3000} autohide>
+        <Toast.Header>
+          <strong className="mr-auto">Interaction Added</strong>
+        </Toast.Header>
+        <Toast.Body>
+          {toastBody}
+        </Toast.Body>
+      </Toast>
       <Col style={{marginTop: "1em"}}>
         <h3>Interaction Entry:</h3>
         <Form onSubmit={handleSubmit(onInteractionFormSubmit)}>
@@ -83,6 +126,7 @@ const EntryPage = (): React.ReactNode => {
                 <option>I&I2</option>
                 <option>I&IL</option>
                 <option>Inst2</option>
+                <option>SITL</option>
               </Form.Control>
               <InputErrMsg message={errors.initiator && errors.initiator.message}></InputErrMsg>
             </Form.Group>
@@ -97,6 +141,7 @@ const EntryPage = (): React.ReactNode => {
                 <option>I&I2</option>
                 <option>I&IL</option>
                 <option>Inst2</option>
+                <option>SITL</option>
               </Form.Control>
               <InputErrMsg message={errors.receiver && errors.receiver.message}></InputErrMsg>
             </Form.Group>
