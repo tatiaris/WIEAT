@@ -253,10 +253,12 @@ const EntryPage = (): React.ReactNode => {
             <Form.Group>
               <Form.Label>Full Name</Form.Label>
               <Form.Control name="full_name" ref={registerParticipant({ required: "Required" })} type="text" placeholder='ex: Field Observer' />
+              <InputErrMsg message={errorsParticipant.full_name && errorsParticipant.full_name.message}></InputErrMsg>
             </Form.Group>
             <Form.Group>
               <Form.Label>Abbreviation</Form.Label>
               <Form.Control name="name" ref={registerParticipant({ required: "Required" })} type="text" placeholder='ex: FOB' />
+              <InputErrMsg message={errorsParticipant.name && errorsParticipant.name.message}></InputErrMsg>
             </Form.Group>
             <Form.Group>
               <Form.Label>Color</Form.Label>
@@ -273,10 +275,12 @@ const EntryPage = (): React.ReactNode => {
             <Form.Group>
               <Form.Label>Full Name</Form.Label>
               <Form.Control name="full_name" ref={registerTechnology({ required: "Required" })} type="text" placeholder='ex: Face to Face' />
+              <InputErrMsg message={errorsTechnology.full_name && errorsParticipant.full_name.message}></InputErrMsg>
             </Form.Group>
             <Form.Group>
               <Form.Label>Abbreviation</Form.Label>
               <Form.Control name="name" ref={registerTechnology({ required: "Required" })} type="text" placeholder='ex: FF' />
+              <InputErrMsg message={errorsTechnology.name && errorsParticipant.name.message}></InputErrMsg>
             </Form.Group>
             <Form.Group>
               <Form.Label>Color</Form.Label>
