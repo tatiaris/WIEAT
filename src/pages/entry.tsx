@@ -1,21 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { Mheader } from "../components/Mheader/";
 import { Mnavbar } from "../components/Mnavbar/";
-import { Form, Button, Col, Toast } from "react-bootstrap";
+import { Form, Button, Col, Toast, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { InputErrMsg } from "../components/InputErrMsg";
 
 const EntryPage = (): React.ReactNode => {
   const defaultInitiatorValue = '--- select initiator ---';
   const defaultReceiverValue = '--- select receiver ---';
+  const [insertedDataType, setInsertedDataType] = useState('')
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [duration, setDuration] = useState(0);
   const [initiatorValue, setInitiatorValue] = useState(defaultInitiatorValue);
   const [receiverValue, setReceiverValue] = useState(defaultReceiverValue);
-  const [showNotif, setShowNotif] = useState(true);
+  const [showNotif, setShowNotif] = useState(false);
   const toggleShowNotif = () => setShowNotif(!showNotif);
-  const [toastBody, setToastBody] = useState('no body')
+  const [toastBody, setToastBody] = useState((<></>));
+  const [participants, setParticipants] = useState([]);
+  const [technologies, setTechnologies] = useState([]);
+  const technologiesOptions = technologies.map((t, i) => (
+    <option key={`technology-option-${i}`}>{t}</option>
+  ))
+  const participantOptions = participants.map((p, i) => (
+    <option key={`participant-option-${i}`}>{p}</option>
+  ))
+
+  const loadParticipantNames = async () => {
+    const res = await fetch(`/api/participants`)
+    const json = await res.json()
+    let participantNames = []
+    for (let i = 0; i < json.length; i++) {
+      participantNames.push(json[i].name)
+    }
+    setParticipants(participantNames)
+  }
+
+  const loadTechnologyNames = async () => {
+    const res = await fetch(`/api/technologies`)
+    const json = await res.json()
+    let technologiesNames = []
+    for (let i = 0; i < json.length; i++) {
+      technologiesNames.push(json[i].name)
+    }
+    setTechnologies(technologiesNames)
+  }
 
   const addInteraction = async (interactionData) => {
     const res = await fetch('/api/interactions', {
@@ -26,8 +55,14 @@ const EntryPage = (): React.ReactNode => {
     ).catch((e) => {});
 
     if (res.message == "success") {
-      console.log('interaction added', res.data)
-      setToastBody(`${res.data.initiator} => ${res.data.receiver} (${res.data.technology})`)
+      setToastBody((
+        <>
+          <span>{res.data.initiator} &lt;= {res.data.technology} ({res.data.duration}) =&gt; {res.data.receiver}</span>
+          <br/>
+          {res.data.conversation}
+        </>
+      ))
+      setInsertedDataType(res.insertedDataType)
       setShowNotif(true)
     } else {
       console.log('interaction could not be added')
@@ -40,10 +75,54 @@ const EntryPage = (): React.ReactNode => {
   }
 
   const { handleSubmit, register, errors } = useForm();
+  const { handleSubmit: handleParticipantSubmit, register: registerParticipant, errors: errorsParticipant } = useForm();
+  const { handleSubmit: handleTechnologySubmit, register: registerTechnology, errors: errorsTechnology } = useForm();
 
   const onInteractionFormSubmit = (data) => {
     data.duration = parseInt(data.duration);
     addInteraction(data);
+  }
+
+  const onParticipantFormSubmit = async (participantData) => {
+    const res = await fetch('/api/participants', {
+      method: 'post',
+      body: JSON.stringify(participantData)
+    }).then (
+      response => response.json()
+    ).catch((e) => {});
+
+    if (res.message == "success") {
+      setToastBody((
+        <>
+          {res.data.full_name} ({res.data.name})
+        </>
+      ))
+      setInsertedDataType(res.insertedDataType)
+      setShowNotif(true)
+    } else {
+      console.log('participant could not be added')
+    }
+  }
+
+  const onTechnologyFormSubmit = async (technologyData) => {
+    const res = await fetch('/api/technologies', {
+      method: 'post',
+      body: JSON.stringify(technologyData)
+    }).then (
+      response => response.json()
+    ).catch((e) => {});
+
+    if (res.message == "success") {
+      setToastBody((
+        <>
+          {res.data.full_name} ({res.data.name})
+        </>
+      ))
+      setInsertedDataType(res.insertedDataType)
+      setShowNotif(true)
+    } else {
+      console.log('technology could not be added')
+    }
   }
 
   const getSeconds = (t) => {
@@ -63,26 +142,17 @@ const EntryPage = (): React.ReactNode => {
       setDuration(endSecs - startSecs)
     }
   }, [startTime, endTime]);
+  useEffect(()=>{
+    loadParticipantNames();
+    loadTechnologyNames();
+  }, [])
 
   return (
     <>
       <Mheader title={"FAQ"}></Mheader>
       <Mnavbar theme={"dark"}></Mnavbar>
-      <Toast show={showNotif} onClose={toggleShowNotif} style={{
-        position: 'absolute',
-        bottom: 25,
-        right: 25,
-        background: '#7fe897'
-      }} delay={3000} autohide>
-        <Toast.Header>
-          <strong className="mr-auto">Interaction Added</strong>
-        </Toast.Header>
-        <Toast.Body>
-          {toastBody}
-        </Toast.Body>
-      </Toast>
       <Col style={{marginTop: "1em"}}>
-        <h3>Interaction Entry:</h3>
+        <h3>Interaction Entry</h3>
         <Form onSubmit={handleSubmit(onInteractionFormSubmit)}>
           <Form.Row>
             <Form.Group as={Col}>
@@ -122,11 +192,7 @@ const EntryPage = (): React.ReactNode => {
                 validate: value => (value !== receiverValue && value !== defaultInitiatorValue) || "please choose a valid initiator"
               })}>
                 <option>{defaultInitiatorValue}</option>
-                <option>Field Observer (FOB)</option>
-                <option>I&I2</option>
-                <option>I&IL</option>
-                <option>Inst2</option>
-                <option>SITL</option>
+                {participantOptions}
               </Form.Control>
               <InputErrMsg message={errors.initiator && errors.initiator.message}></InputErrMsg>
             </Form.Group>
@@ -136,23 +202,21 @@ const EntryPage = (): React.ReactNode => {
                 required: "Required",
                 validate: value => (value !== initiatorValue && value !== defaultReceiverValue) || "please choose a valid receiver"
               })}>
-              <option>{defaultReceiverValue}</option>
-                <option>Field Observer (FOB)</option>
-                <option>I&I2</option>
-                <option>I&IL</option>
-                <option>Inst2</option>
-                <option>SITL</option>
+                <option>{defaultReceiverValue}</option>
+                {participantOptions}
               </Form.Control>
               <InputErrMsg message={errors.receiver && errors.receiver.message}></InputErrMsg>
             </Form.Group>
             <Form.Group as={Col}>
               <Form.Label>Technology</Form.Label>
-              <Form.Control name="technology" ref={register({ required: "Required" })} as="select">
-                <option>CO</option>
-                <option>FF</option>
-                <option>PF</option>
-                <option>TP</option>
+              <Form.Control name="technology" ref={register({
+                required: "Required",
+                validate: value => value !== '--- select technology ---' || "please choose a valid technology"
+              })} as="select">
+                <option>--- select technology ---</option>
+                {technologiesOptions}
               </Form.Control>
+              <InputErrMsg message={errors.technology && errors.technology.message}></InputErrMsg>
             </Form.Group>
           </Form.Row>
           <Form.Group>
@@ -166,20 +230,77 @@ const EntryPage = (): React.ReactNode => {
             })}/>
             <InputErrMsg message={errors.conversation && errors.conversation.message}></InputErrMsg>
           </Form.Group>
-          <Form.Group>
-            <Form.Label>Sub-episode</Form.Label>
-            <Form.Control name="sub_episode" ref={register({ required: "Required" })} type="text" placeholder='ex: Start of Meeting' />
-            <InputErrMsg message={errors.sub_episode && errors.sub_episode.message}></InputErrMsg>
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Episode (optional)</Form.Label>
-            <Form.Control name="episode" ref={register} type="text" placeholder='ex: Final Product Meeting' />
-          </Form.Group>
+          <Form.Row>
+            <Form.Group as={Col}>
+              <Form.Label>Sub-episode</Form.Label>
+              <Form.Control name="sub_episode" ref={register({ required: "Required" })} type="text" placeholder='ex: Start of Meeting' />
+              <InputErrMsg message={errors.sub_episode && errors.sub_episode.message}></InputErrMsg>
+            </Form.Group>
+            <Form.Group as={Col}>
+              <Form.Label>Episode (optional)</Form.Label>
+              <Form.Control name="episode" ref={register} type="text" placeholder='ex: Final Product Meeting' />
+            </Form.Group>
+          </Form.Row>
           <Button variant="primary" type="submit">
-            Submit
+            Submit Interaction
           </Button>
         </Form>
       </Col>
+      <Row style={{margin: "2em 0em 2em 0em"}}>
+        <Col style={{marginTop: "1em"}}>
+          <h3>Participant Entry</h3>
+          <Form onSubmit={handleParticipantSubmit(onParticipantFormSubmit)}>
+            <Form.Group>
+              <Form.Label>Full Name</Form.Label>
+              <Form.Control name="full_name" ref={registerParticipant} type="text" placeholder='ex: Field Observer' />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Abbreviation</Form.Label>
+              <Form.Control name="name" ref={registerParticipant} type="text" placeholder='ex: FOB' />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Color</Form.Label>
+              <Form.Control name="color" ref={registerParticipant} type="color" defaultValue="#ffffff" />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Submit Participant
+            </Button>
+          </Form>
+        </Col>
+        <Col style={{marginTop: "1em"}}>
+          <h3>Technology Entry</h3>
+          <Form onSubmit={handleTechnologySubmit(onTechnologyFormSubmit)}>
+            <Form.Group>
+              <Form.Label>Full Name</Form.Label>
+              <Form.Control name="full_name" ref={registerTechnology} type="text" placeholder='ex: Face to Face' />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Abbreviation</Form.Label>
+              <Form.Control name="name" ref={registerTechnology} type="text" placeholder='ex: FF' />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Color</Form.Label>
+              <Form.Control name="color" ref={registerTechnology} type="color" defaultValue="#ffffff" />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Submit Technology
+            </Button>
+          </Form>
+        </Col>
+      </Row>
+      <Toast show={showNotif} onClose={toggleShowNotif} style={{
+        position: 'absolute',
+        bottom: 25,
+        right: 25,
+        background: '#7fe897'
+      }} delay={10000} autohide>
+        <Toast.Header>
+          <strong className="mr-auto">{insertedDataType} Added</strong>
+        </Toast.Header>
+        <Toast.Body>
+          {toastBody}
+        </Toast.Body>
+      </Toast>
     </>
   );
 };
