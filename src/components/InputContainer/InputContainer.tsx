@@ -22,7 +22,6 @@ export const InputContainer: React.FC<InputProps> = (props) => {
   };
 
   const handleFileChange = (event) => {
-    console.log(event.target.value);
     event.preventDefault();
 
     const files = event.target.files;
@@ -48,13 +47,11 @@ export const InputContainer: React.FC<InputProps> = (props) => {
   }
 
   let colorInputs = [(<></>)];
-  if (props.colorDict == undefined) {
-    console.log("no colors");
-  } else {
+  if (props.colorDict != undefined) {
     colorInputs = (Object.keys(props.colorDict.colors)).map((key, i) => (
       <>
-        <Form.Label column key={"color-label-" + i}>{key + ': '}</Form.Label>
-        <Col>
+        <Form.Label column sm="1" key={"color-label-" + i}>{key + ': '}</Form.Label>
+        <Col style={{ paddingTop: "calc(.375rem + 1px)", paddingBottom: "calc(0.375rem + 1px)" }} sm="1">
           <input key={"color-input-" + i} onChange={handleColorUpdate} type="color" name={key} defaultValue={props.colorDict.colors[key]}/>
         </Col>
       </>
@@ -62,22 +59,17 @@ export const InputContainer: React.FC<InputProps> = (props) => {
   }
 
   return (
-    <InpsContainer>
+    <InpsContainer style={{ borderBottom: "1px solid black" }}>
       <Form>
         <Form.Group as={Row}>
           <Form.Label column sm="1">Episode File:</Form.Label>
-          <Col sm="10">
+          <Col sm="4">
             <Form.File onChange={handleFileChange} id="exampleFormControlFile1" />
           </Col>
           <Col sm="1">
             <Button onClick={handleDownload} variant="primary" type="submit">Download</Button>
           </Col>
         </Form.Group>
-        <span>Sample files: </span>
-        <a href="/files/sample.csv">csv</a>,{" "}
-        <a href="/files/sample.yaml">yaml</a>,{" "}
-        <a href="/files/sample.json">json</a>
-        <br/>
         <Form.Group as={Row}>{colorInputs}</Form.Group>
       </Form>
 

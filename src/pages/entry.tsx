@@ -25,7 +25,10 @@ const EntryPage = (): React.ReactNode => {
   const participantOptions = participants.map((p, i) => (
     <option key={`participant-option-${i}`}>{p}</option>
   ))
-
+  const { handleSubmit, register, errors } = useForm();
+  const { handleSubmit: handleParticipantSubmit, register: registerParticipant, errors: errorsParticipant } = useForm();
+  const { handleSubmit: handleTechnologySubmit, register: registerTechnology, errors: errorsTechnology } = useForm();
+  
   const loadParticipantNames = async () => {
     const res = await fetch(`/api/participants`)
     const json = await res.json()
@@ -73,10 +76,6 @@ const EntryPage = (): React.ReactNode => {
     let regex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/
     return regex.test(timeStr)
   }
-
-  const { handleSubmit, register, errors } = useForm();
-  const { handleSubmit: handleParticipantSubmit, register: registerParticipant, errors: errorsParticipant } = useForm();
-  const { handleSubmit: handleTechnologySubmit, register: registerTechnology, errors: errorsTechnology } = useForm();
 
   const onInteractionFormSubmit = (data) => {
     data.duration = parseInt(data.duration);
@@ -126,7 +125,6 @@ const EntryPage = (): React.ReactNode => {
   }
 
   const getSeconds = (t) => {
-    console.log(t)
     return t[2] + t[1]*60 + t[0]*3600
   }
 
@@ -275,12 +273,12 @@ const EntryPage = (): React.ReactNode => {
             <Form.Group>
               <Form.Label>Full Name</Form.Label>
               <Form.Control name="full_name" ref={registerTechnology({ required: "Required" })} type="text" placeholder='ex: Face to Face' />
-              <InputErrMsg message={errorsTechnology.full_name && errorsParticipant.full_name.message}></InputErrMsg>
+              <InputErrMsg message={errorsTechnology.full_name && errorsTechnology.full_name.message}></InputErrMsg>
             </Form.Group>
             <Form.Group>
               <Form.Label>Abbreviation</Form.Label>
               <Form.Control name="name" ref={registerTechnology({ required: "Required" })} type="text" placeholder='ex: FF' />
-              <InputErrMsg message={errorsTechnology.name && errorsParticipant.name.message}></InputErrMsg>
+                <InputErrMsg message={errorsTechnology.name && errorsTechnology.name.message}></InputErrMsg>
             </Form.Group>
             <Form.Group>
               <Form.Label>Color</Form.Label>

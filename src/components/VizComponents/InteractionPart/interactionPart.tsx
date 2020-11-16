@@ -17,9 +17,7 @@ import { Interaction } from "../Interaction";
 export const InteractionPart: React.FC<InteractionPartProps> = (props) => {
   let interactionElements = <></>;
 
-  if (props.interactions == undefined) {
-    console.log("no interactions");
-  } else {
+  if (props.interactions != undefined) {
     interactionElements = props.interactions.interactions.map(
       (interaction_details, i) => (
         <Interaction

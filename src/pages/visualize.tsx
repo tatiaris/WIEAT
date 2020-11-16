@@ -11,7 +11,7 @@ interface colorDict {
 
 const VisualizePage = (): React.ReactNode => {
   const [inpContent, setContent] = useState({});
-  const [episode, setEpisode] = useState('undetermined');
+  const [episode, setEpisode] = useState('');
 
   const visualize_data = (data) => {
     setParticipantColors(generateColorDict(data))
@@ -105,15 +105,22 @@ const VisualizePage = (): React.ReactNode => {
 
   return (
     <>
-      <Mheader title={"FAQ"}></Mheader>
+      <Mheader title={"Visualize"}></Mheader>
       <Mnavbar theme={"dark"}></Mnavbar>
       <Col style={{marginTop: "1em"}}>
-        <h3>Poster Visualization:</h3>
+        <h3>Poster Visualization</h3>
+        <Form.Group>
+          <span>Sample files: </span>
+          <a href="/files/sample.csv">csv</a>,{" "}
+          <a href="/files/sample.yaml">yaml</a>,{" "}
+          <a href="/files/sample.json">json</a>
+          <br/>
+        </Form.Group>
         <Form onSubmit={handleEpisodeUpdate}>
           <Form.Group as={Row}>
             <Form.Label column sm="1">Episode Title:</Form.Label>
-            <Col sm="10">
-              <Form.Control onChange={e => setEpisode(e.target.value)} type="text" placeholder="ex: undetermined" required defaultValue={episode} />
+            <Col sm="4">
+              <Form.Control onChange={e => setEpisode(e.target.value)} type="text" placeholder="ex: Initial Field Report - 1st Observation" required />
             </Col>
             <Col sm="1">
               <Button variant="primary" type="submit">Submit</Button>

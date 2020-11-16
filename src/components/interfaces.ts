@@ -47,3 +47,6 @@ export interface InteractionProps {
 export interface InputErrMsgProps {
   message: string;
 }
+export interface DashboardProps {
+  data: any;
+}

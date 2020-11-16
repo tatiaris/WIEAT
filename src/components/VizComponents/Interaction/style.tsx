@@ -47,3 +47,8 @@ export const Conversation = styled.td`
   padding: 0 1em;
   font-size: 0.9em;
 `;
+
+export const Ptr = styled.tr`
+  display: flex;
+  justify-content: center;
+`;

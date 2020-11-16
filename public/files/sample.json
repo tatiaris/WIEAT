@@ -125,7 +125,7 @@
                 "label": "Collection",
                 "interactions": [
                    {
-                      "initiator": "Field Observer (FOB)",
+                      "initiator": "FOB",
                       "technology": "TP",
                       "receiver": "I&IL",
                       "duration": 93,

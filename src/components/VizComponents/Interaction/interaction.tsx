@@ -5,6 +5,7 @@ import {
   Receiver,
   StyledInteraction,
   Technology,
+  Ptr
 } from "./style";
 import { InteractionProps } from "../../interfaces";
 import PropTypes from "prop-types";
@@ -35,25 +36,25 @@ export const Interaction: React.FC<InteractionProps> = (props) => {
   return (
     <StyledInteraction>
       <tbody>
-        <tr>
+        <Ptr>
           <Initiator style={initiatorStyle}>
             {props.details.initiator}
           </Initiator>
-        </tr>
-        <tr>
+        </Ptr>
+        <Ptr>
           <Technology>{props.details.technology}</Technology>
-        </tr>
-        <tr>
+        </Ptr>
+        <Ptr>
           <Receiver style={receiverStyle}>{props.details.receiver}</Receiver>
-        </tr>
-        <tr>
+        </Ptr>
+        <Ptr>
           <td>{props.details.duration}</td>
-        </tr>
-        <tr>
+        </Ptr>
+        <Ptr>
           <Conversation style={dynamicWidth}>
             {props.details.conversation}
           </Conversation>
-        </tr>
+        </Ptr>
       </tbody>
     </StyledInteraction>
   );
