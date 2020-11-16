@@ -4,6 +4,7 @@ import { Mnavbar } from "../components/Mnavbar/";
 import { Form, Button, Col, Toast, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { InputErrMsg } from "../components/InputErrMsg";
+import { MFooter } from "../components/MFooter";
 
 const EntryPage = (): React.ReactNode => {
   const defaultInitiatorValue = '--- select initiator ---';
@@ -140,6 +141,7 @@ const EntryPage = (): React.ReactNode => {
       setDuration(endSecs - startSecs)
     }
   }, [startTime, endTime]);
+
   useEffect(()=>{
     loadParticipantNames();
     loadTechnologyNames();
@@ -147,8 +149,8 @@ const EntryPage = (): React.ReactNode => {
 
   return (
     <>
-      <Mheader title={"FAQ"}></Mheader>
-      <Mnavbar theme={"dark"}></Mnavbar>
+      <Mheader title={"Entry"}/>
+      <Mnavbar theme={"dark"}/>
       <Col style={{marginTop: "1em"}}>
         <h3>Interaction Entry</h3>
         <Form onSubmit={handleSubmit(onInteractionFormSubmit)}>
@@ -303,6 +305,7 @@ const EntryPage = (): React.ReactNode => {
           {toastBody}
         </Toast.Body>
       </Toast>
+      <MFooter/>
     </>
   );
 };

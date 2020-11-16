@@ -1,13 +1,14 @@
 import React from "react";
+import { MFooter } from "../components/MFooter";
 import { Mheader } from "../components/Mheader/"
 import { Mnavbar } from "../components/Mnavbar/";
 
 const Tutorial = (): React.ReactNode => {
   return (
     <>
-        <Mheader title={"Tutorial"}></Mheader>
-        <Mnavbar theme={"dark"}></Mnavbar>
-        How to use WIEAT
+        <Mheader title={"Tutorial"}/>
+        <Mnavbar theme={"dark"}/>
+        <MFooter/>
     </>
   );
 };

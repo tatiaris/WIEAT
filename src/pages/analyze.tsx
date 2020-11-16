@@ -3,6 +3,7 @@ import { Mheader } from "../components/Mheader/"
 import { Mnavbar } from "../components/Mnavbar/";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { Dashboard } from "../components/Dashboard";
+import { MFooter } from "../components/MFooter";
 
 const AnalyzePage = (): React.ReactNode => {
   const [episode, setEpisode] = useState('undetermined');
@@ -31,8 +32,8 @@ const AnalyzePage = (): React.ReactNode => {
 
   return (
     <>
-        <Mheader title={"Analyze"}></Mheader>
-        <Mnavbar theme={"dark"}></Mnavbar>
+        <Mheader title={"Analyze"}/>
+        <Mnavbar theme={"dark"}/>
         <Col style={{ marginTop: "1em" }}>
         <h3>Episode Analysis</h3>
         <Form style={{ borderBottom: "1px solid black" }} onSubmit={handleEpisodeUpdate}>
@@ -48,6 +49,7 @@ const AnalyzePage = (): React.ReactNode => {
         </Form>
         {dashboardComponent}
       </Col>
+      <MFooter/>
     </>
   );
 };

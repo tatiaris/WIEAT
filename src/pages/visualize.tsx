@@ -4,6 +4,7 @@ import { Mnavbar } from "../components/Mnavbar";
 import { InputContainer } from "../components/InputContainer";
 import { PosterContainer } from "../components/PosterContainer";
 import { Form, Button, Col, Row } from "react-bootstrap";
+import { MFooter } from "../components/MFooter";
 
 interface colorDict {
   colors: any;
@@ -105,8 +106,8 @@ const VisualizePage = (): React.ReactNode => {
 
   return (
     <>
-      <Mheader title={"Visualize"}></Mheader>
-      <Mnavbar theme={"dark"}></Mnavbar>
+      <Mheader title={"Visualize"}/>
+      <Mnavbar theme={"dark"}/>
       <Col style={{marginTop: "1em"}}>
         <h3>Poster Visualization</h3>
         <Form.Group>
@@ -137,6 +138,7 @@ const VisualizePage = (): React.ReactNode => {
           content={inpContent}
         ></PosterContainer>
       </Col>
+      <MFooter/>
     </>
   );
 };
