@@ -50,3 +50,6 @@ export interface InputErrMsgProps {
 export interface DashboardProps {
   data: any;
 }
+export interface WordCloudProps {
+  interactions: any;
+}

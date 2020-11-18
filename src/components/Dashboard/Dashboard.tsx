@@ -2,11 +2,6 @@ import React from "react";
 import { DashboardProps } from "../interfaces";
 import PropTypes from "prop-types";
 import { Col, Row, Table } from "react-bootstrap";
-// import CanvasJSReact from '../../pages/api/canvasjs.react';
-
-/**
- * Dashboard component
-*/
 
 const getTotalWords = (convo) => {
   return convo.split(' ').length
@@ -16,30 +11,32 @@ const average = (array) => {
   return array.reduce((a, b) => a + b) / array.length;
 }
 
+/**
+ * Dashboard component
+*/
 export const Dashboard: React.FC<DashboardProps> = (props) => {
   let CanvasJSReact, CanvasJS, CanvasJSChart;
   let charts = (<></>);
 
   const totalInteractions = props.data.length;
-  let participantList = new Set()
-  let durationList = []
-  let wpiList = []
+  let participantCount = {}
+  let participantList = Array.from(new Set(props.data.map(d => d.initiator).concat(props.data.map(d => d.receiver))))
+  participantList.forEach(p => { participantCount[p.toString()] = 0 });
+  let participantsPieChartDatapoints = []
+  
+  let durationList = props.data.map(d => d.duration)
+  let wpiList = props.data.map(d => getTotalWords(d.conversation))
+  
   let technologyCount = {}
+  let technologyList = Array.from(new Set(props.data.map(d => d.technology)))
+  technologyList.forEach(t => { technologyCount[t.toString()] = 0 });
   let technologyPieChartDatapoints = []
 
   for (let i = 0; i < props.data.length; i++) {
-    durationList.push(props.data[i].duration)
-    wpiList.push(getTotalWords(props.data[i].conversation))
-    participantList.add(props.data[i].initiator)
-    participantList.add(props.data[i].receiver)
-    if (props.data[i].technology in technologyCount) {
-      technologyCount[props.data[i].technology] += 1
-    } else {
-      technologyCount[props.data[i].technology] = 1
-    }
+    participantCount[props.data[i].initiator] += 1
+    participantCount[props.data[i].receiver] += 1
+    technologyCount[props.data[i].technology] += 1
   }
-
-  console.log(participantList)
 
   durationList = durationList.sort((a, b) => a - b)
   const minDuration = durationList[0];
@@ -61,6 +58,12 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
     technologyPieChartDatapoints.push({
       y: Math.round(technologyCount[t]*10000/totalInteractions)/100,
       label: t
+    })
+  }
+  for (let p in participantCount) {
+    participantsPieChartDatapoints.push({
+      y: Math.round(participantCount[p]*10000/totalInteractions)/100,
+      label: p
     })
   }
   
@@ -140,28 +143,51 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
     }]
   }
 
+  const participantsPieChart = {
+    theme: "light2",
+    exportEnabled: true,
+    animationEnabled: true,
+    title: {
+      text: "Technology Used",
+      fontSize: "18"
+    },
+    data: [{
+      type: "pie",
+      startAngle: 75,
+      toolTipContent: "<b>{label}</b>: {y}%",
+      showInLegend: "true",
+      legendText: "{label}",
+      indexLabelFontSize: 16,
+      indexLabel: "{label} - {y}%",
+      dataPoints: participantsPieChartDatapoints
+    }]
+  }
+
   if (typeof window !== 'undefined') {
     CanvasJSReact = require('../../pages/api/canvasjs.react')
     CanvasJSChart = CanvasJSReact.default.CanvasJSChart;
     charts = (
       <>
-        <Col sm="4">
+        <Col sm="4" style={{ margin: "1em" }}>
           <CanvasJSChart options = {TechnologyPieChart}/>
         </Col>
-        <Col sm="3">
+        <Col sm="4" style={{ margin: "1em" }}>
+          <CanvasJSChart options = {participantsPieChart}/>
+        </Col>
+        <Col sm="3" style={{ margin: "1em" }}>
           <CanvasJSChart options = {DurationsBoxPlot}/>
         </Col>
-        <Col sm="3">
+        <Col sm="3" style={{ margin: "1em" }}>
           <CanvasJSChart options = {WPIBoxPlot}/>
         </Col>
       </>
     )
   }
-  
+
   return (
     <>
       <Row style={{padding: "1em"}}>
-        <Col sm="2">
+        <Col sm="3" style={{ margin: "1em" }}>
           <Table striped>
             <thead>
               <tr>
@@ -171,14 +197,14 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
             <tbody>
               <tr>
                 <td>Participants</td>
-                <td>{participantList.size}</td>
+                <td>{participantList.length}</td>
               </tr>
               <tr>
                 <td>Technologies</td>
                 <td>{technologyPieChartDatapoints.length}</td>
               </tr>
               <tr>
-                <td>Total Interactions</td>
+                <td>Frequency of Interactions</td>
                 <td>{totalInteractions}</td>
               </tr>
               <tr>
@@ -200,7 +226,11 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
             </tbody>
           </Table>
         </Col>
-        {charts}
+        <Col>
+          <Row>
+            {charts}
+          </Row>
+        </Col>
       </Row>
     </>
   );
