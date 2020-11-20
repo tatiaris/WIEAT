@@ -148,7 +148,7 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
     exportEnabled: true,
     animationEnabled: true,
     title: {
-      text: "Technology Used",
+      text: "Participation Distribution",
       fontSize: "18"
     },
     data: [{
@@ -168,16 +168,16 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
     CanvasJSChart = CanvasJSReact.default.CanvasJSChart;
     charts = (
       <>
-        <Col sm="4" style={{ margin: "1em" }}>
+        <Col sm="5" style={{ margin: "1em" }}>
           <CanvasJSChart options = {TechnologyPieChart}/>
         </Col>
-        <Col sm="4" style={{ margin: "1em" }}>
+        <Col sm="5" style={{ margin: "1em" }}>
           <CanvasJSChart options = {participantsPieChart}/>
         </Col>
-        <Col sm="3" style={{ margin: "1em" }}>
+        <Col sm="5" style={{ margin: "1em" }}>
           <CanvasJSChart options = {DurationsBoxPlot}/>
         </Col>
-        <Col sm="3" style={{ margin: "1em" }}>
+        <Col sm="5" style={{ margin: "1em" }}>
           <CanvasJSChart options = {WPIBoxPlot}/>
         </Col>
       </>
