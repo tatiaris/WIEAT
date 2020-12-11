@@ -11,6 +11,25 @@ const average = (array) => {
   return array.reduce((a, b) => a + b) / array.length;
 }
 
+const getDiversityIndex = (interactionList, participantList) => {
+  let total = 0
+  let count = 0
+  for (let i = 0; i < participantList.length - 1; i++) {
+    for (let j = i + 1; j < participantList.length; j++) {
+      count = 0
+      for (let k = 0; k < interactionList.length; k++) {
+        if ((interactionList[k].initiator == participantList[i] || interactionList[k].initiator == participantList[j]) && (interactionList[k].receiver == participantList[i] || interactionList[k].receiver == participantList[j])) {
+          count++;
+        }
+      }
+      if (count > 0) {
+        total += (count/interactionList.length) * Math.log(count/interactionList.length)
+      }
+    }
+  }
+  return total * -1
+}
+
 /**
  * Dashboard component
 */
@@ -45,6 +64,7 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
   const q2Duration = durationList[Math.floor(durationList.length/2)]
   const q3Duration = durationList[Math.floor(durationList.length*3/4)]
   const averageDuration = Math.round(average(durationList)*10)/10
+  const siil = durationList.reduce((a, b) => a + b, 0)
 
   wpiList = wpiList.sort((a, b) => a - b)
   const minwpi = wpiList[0];
@@ -53,6 +73,12 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
   const q2wpi = wpiList[Math.floor(wpiList.length/2)]
   const q3wpi = wpiList[Math.floor(wpiList.length*3/4)]
   const averageWpi = Math.round(average(wpiList))
+
+  const pList = Array.from(new Set(props.data.map(d => d.initiator).concat(props.data.map(d => d.receiver))))
+  const diversityIndex = Math.round(getDiversityIndex(props.data, pList)*1000)/1000
+
+  const episodeStartTime = props.data[0].start_time
+  const episodeEndTime = props.data[props.data.length - 1].start_time
 
   for (let t in technologyCount) {
     technologyPieChartDatapoints.push({
@@ -222,6 +248,22 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
               <tr>
                 <td>Median WPI</td>
                 <td>{q2wpi}</td>
+              </tr>
+              <tr>
+                <td>SIIL</td>
+                <td>{siil}s</td>
+              </tr>
+              <tr>
+                <td>Diversity Index</td>
+                <td>{diversityIndex}</td>
+              </tr>
+              <tr>
+                <td>Episode Length</td>
+                <td>{episodeStartTime} - {episodeEndTime}</td>
+              </tr>
+              <tr>
+                <td>I-I Ratio</td>
+                <td>coming soon</td>
               </tr>
             </tbody>
           </Table>
