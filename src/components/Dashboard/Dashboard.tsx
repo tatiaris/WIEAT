@@ -3,9 +3,6 @@ import { DashboardProps } from "../interfaces";
 import PropTypes from "prop-types";
 import { Col, Row, Table } from "react-bootstrap";
 
-const getTotalWords = (convo) => {
-  return convo.split(' ').length
-}
 const average = (array) => {
   if (array.length < 1) return 0;
   return array.reduce((a, b) => a + b) / array.length;
@@ -44,7 +41,6 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
   let participantsPieChartDatapoints = []
   
   let durationList = props.data.map(d => d.duration)
-  let wpiList = props.data.map(d => getTotalWords(d.conversation))
   
   let technologyCount = {}
   let technologyList = Array.from(new Set(props.data.map(d => d.technology)))
@@ -65,14 +61,6 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
   const q3Duration = durationList[Math.floor(durationList.length*3/4)]
   const averageDuration = Math.round(average(durationList)*10)/10
   const siil = durationList.reduce((a, b) => a + b, 0)
-
-  wpiList = wpiList.sort((a, b) => a - b)
-  const minwpi = wpiList[0];
-  const maxwpi = wpiList[wpiList.length - 1]
-  const q1wpi = wpiList[Math.floor(wpiList.length/4)]
-  const q2wpi = wpiList[Math.floor(wpiList.length/2)]
-  const q3wpi = wpiList[Math.floor(wpiList.length*3/4)]
-  const averageWpi = Math.round(average(wpiList))
 
   const pList = Array.from(new Set(props.data.map(d => d.initiator).concat(props.data.map(d => d.receiver))))
   const diversityIndex = Math.round(getDiversityIndex(props.data, pList)*1000)/1000
@@ -113,34 +101,6 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
       stroke: 1,
       dataPoints: [
         { label: "Conversations",  y: [minDuration, q1Duration, q3Duration, maxDuration, q2Duration] }
-      ],
-      whiskerThickness: 3,
-      stemThickness: 3,
-      lineThickness: 3,
-      upperBoxThickness: 3
-    }]
-  }
-
-  const WPIBoxPlot = {
-    theme: "light2",
-    animationEnabled: true,
-    exportEnabled: true,
-		dataPointWidth: 40,
-    title:{
-      text: "WPI Distribution",
-      fontSize: "18"
-    },
-    axisY: {
-      title: "WPI (count)"
-    },
-    data: [{
-      type: "boxAndWhisker",
-      // color: "black",
-      upperBoxColor: "#23bfaa",
-      lowerBoxColor: "#c0504e",
-      stroke: 1,
-      dataPoints: [
-        { label: "Conversations",  y: [minwpi, q1wpi, q3wpi, maxwpi, q2wpi] }
       ],
       whiskerThickness: 3,
       stemThickness: 3,
@@ -203,9 +163,6 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
         <Col sm="5" style={{ margin: "1em" }}>
           <CanvasJSChart options = {DurationsBoxPlot}/>
         </Col>
-        <Col sm="5" style={{ margin: "1em" }}>
-          <CanvasJSChart options = {WPIBoxPlot}/>
-        </Col>
       </>
     )
   }
@@ -217,12 +174,12 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
           <Table striped>
             <thead>
               <tr>
-                <th style={{ textAlign: "center", borderTop: "0px", paddingTop: "0px" }} colSpan={2}>Overall Statistics</th>
+                <th style={{ textAlign: "center", borderTop: "0px", paddingTop: "0px" }} colSpan={2}>Overall Analytics</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Participants</td>
+                <td>Roles</td>
                 <td>{participantList.length}</td>
               </tr>
               <tr>
@@ -234,6 +191,14 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
                 <td>{totalInteractions}</td>
               </tr>
               <tr>
+                <td>SIIL</td>
+                <td>{siil}s</td>
+              </tr>
+              <tr>
+                <td>Episode Length</td>
+                <td>{episodeStartTime} - {episodeEndTime}</td>
+              </tr>
+              <tr>
                 <td>Average Duration</td>
                 <td>{averageDuration}s</td>
               </tr>
@@ -242,24 +207,8 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
                 <td>{q2Duration}s</td>
               </tr>
               <tr>
-                <td>Average WPI</td>
-                <td>{averageWpi}</td>
-              </tr>
-              <tr>
-                <td>Median WPI</td>
-                <td>{q2wpi}</td>
-              </tr>
-              <tr>
-                <td>SIIL</td>
-                <td>{siil}s</td>
-              </tr>
-              <tr>
                 <td>Diversity Index</td>
                 <td>{diversityIndex}</td>
-              </tr>
-              <tr>
-                <td>Episode Length</td>
-                <td>{episodeStartTime} - {episodeEndTime}</td>
               </tr>
               <tr>
                 <td>I-I Ratio</td>

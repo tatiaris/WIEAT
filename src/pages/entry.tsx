@@ -261,6 +261,11 @@ const EntryPage = (): React.ReactNode => {
               <InputErrMsg message={errorsParticipant.name && errorsParticipant.name.message}></InputErrMsg>
             </Form.Group>
             <Form.Group>
+              <Form.Label>Code</Form.Label>
+              <Form.Control name="code" ref={registerParticipant({ required: "Required" })} type="text" placeholder='ex: 143' />
+              <InputErrMsg message={errorsParticipant.code && errorsParticipant.code.message}></InputErrMsg>
+            </Form.Group>
+            <Form.Group>
               <Form.Label>Color</Form.Label>
               <Form.Control name="color" ref={registerParticipant} type="color" defaultValue="#ffffff" />
             </Form.Group>
