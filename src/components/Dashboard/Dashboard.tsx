@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { DashboardProps } from "../interfaces";
 import PropTypes from "prop-types";
 import { Col, Row, Table } from "react-bootstrap";
@@ -6,6 +6,21 @@ import { Col, Row, Table } from "react-bootstrap";
 const average = (array) => {
   if (array.length < 1) return 0;
   return array.reduce((a, b) => a + b) / array.length;
+}
+
+const getEpisodeLength = (st, et) => {
+  st = st.split(':')
+  et = et.split(':')
+  const sh = parseInt(st[0])
+  const sm = parseInt(st[1])
+  const eh = parseInt(et[0])
+  const em = parseInt(et[1])
+
+  let length = 0;
+  if (sh != eh) length = (sh - eh)*60*60 + 60 - sm + em;
+  else length = (em - sm)*60
+
+  return length
 }
 
 const getDiversityIndex = (interactionList, participantList) => {
@@ -27,10 +42,33 @@ const getDiversityIndex = (interactionList, participantList) => {
   return total * -1
 }
 
+const getIIRatio = async (interactionList, participantList) => {
+  let ratio = 0;
+
+  const res = await fetch(`/api/participants`)
+  const participantObjList = await res.json()
+  let participantSection = {}
+  participantObjList.forEach(p => {
+    participantSection[p.name] = p.code.charAt(0);
+  });
+
+  interactionList.forEach(i => {
+    if (participantSection[i.initiator] == participantSection[i.receiver]) {
+      ratio++;
+    }
+  });
+  
+  ratio = Math.log(ratio/(interactionList.length - ratio));
+  
+  return Promise.resolve(ratio)
+}
+
 /**
  * Dashboard component
 */
 export const Dashboard: React.FC<DashboardProps> = (props) => {
+  const [iiRatio, setiiRatio] = useState(0);
+
   let CanvasJSReact, CanvasJS, CanvasJSChart;
   let charts = (<></>);
 
@@ -65,8 +103,14 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
   const pList = Array.from(new Set(props.data.map(d => d.initiator).concat(props.data.map(d => d.receiver))))
   const diversityIndex = Math.round(getDiversityIndex(props.data, pList)*1000)/1000
 
+  const loadIIRatio = async () => {
+    await getIIRatio(props.data, pList).then(r => setiiRatio(Math.round(r*1000)/1000))
+  }
+  loadIIRatio()
+
   const episodeStartTime = props.data[0].start_time
   const episodeEndTime = props.data[props.data.length - 1].start_time
+  const episodeLength = getEpisodeLength(episodeStartTime, episodeEndTime)
 
   for (let t in technologyCount) {
     technologyPieChartDatapoints.push({
@@ -79,6 +123,50 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
       y: Math.round(participantCount[p]*10000/totalInteractions)/100,
       label: p
     })
+  }
+
+  const diversityIndexIIRatioOptions = {
+    animationEnabled: true,
+    theme: "light2",
+    title:{
+      text: "Diversity Index vs I-I Ratio",
+      fontSize: "18"
+    },
+    axisX: {
+      title: "",
+    },
+    axisY: {
+      title: "value"
+    },
+    data: [{
+      type: "bar",
+      dataPoints: [
+        { y:  diversityIndex, label: "Diversity Index" },
+        { y:  iiRatio, label: "I-I Ratio" }
+      ]
+    }]
+  }
+
+  const siilEpisodeLengthOptions = {
+    animationEnabled: true,
+    theme: "light2",
+    title:{
+      text: "SIIL vs Episode Length",
+      fontSize: "18"
+    },
+    axisX: {
+      title: "",
+    },
+    axisY: {
+      title: "seconds"
+    },
+    data: [{
+      type: "bar",
+      dataPoints: [
+        { y:  episodeLength, label: "Episode Length" },
+        { y:  siil, label: "SIIL" }
+      ]
+    }]
   }
   
   const DurationsBoxPlot = {
@@ -161,6 +249,12 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
           <CanvasJSChart options = {participantsPieChart}/>
         </Col>
         <Col sm="5" style={{ margin: "1em" }}>
+          <CanvasJSChart options = {siilEpisodeLengthOptions}/>
+        </Col>
+        <Col sm="5" style={{ margin: "1em" }}>
+          <CanvasJSChart options = {diversityIndexIIRatioOptions}/>
+        </Col>
+        <Col sm="5" style={{ margin: "1em" }}>
           <CanvasJSChart options = {DurationsBoxPlot}/>
         </Col>
       </>
@@ -191,12 +285,12 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
                 <td>{totalInteractions}</td>
               </tr>
               <tr>
-                <td>SIIL</td>
-                <td>{siil}s</td>
+                <td>Episode Length</td>
+                <td>{episodeLength}s</td>
               </tr>
               <tr>
-                <td>Episode Length</td>
-                <td>{episodeStartTime} - {episodeEndTime}</td>
+                <td>SIIL</td>
+                <td>{siil}s</td>
               </tr>
               <tr>
                 <td>Average Duration</td>
@@ -212,13 +306,13 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
               </tr>
               <tr>
                 <td>I-I Ratio</td>
-                <td>coming soon</td>
+                <td>{iiRatio}</td>
               </tr>
             </tbody>
           </Table>
         </Col>
         <Col>
-          <Row>
+          <Row className="justify-content-md-center">
             {charts}
           </Row>
         </Col>

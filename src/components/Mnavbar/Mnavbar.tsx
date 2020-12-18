@@ -22,6 +22,7 @@ export const Mnavbar: React.FC<MnavbarProps> = (props) => {
           <NavDropdown.Divider />
           <Nav>
             <Nav.Link href="/entry">Entry</Nav.Link>
+            <Nav.Link href="/update">Update</Nav.Link>
             <Nav.Link href="/visualize">Visualize</Nav.Link>
             <Nav.Link href="/analyze">Analyze</Nav.Link>
           </Nav>
