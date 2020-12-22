@@ -23,14 +23,14 @@ const getEpisodeLength = (st, et) => {
   return length
 }
 
-const getDiversityIndex = (interactionList, participantList) => {
+const getDiversityIndex = (interactionList, roleList) => {
   let total = 0
   let count = 0
-  for (let i = 0; i < participantList.length - 1; i++) {
-    for (let j = i + 1; j < participantList.length; j++) {
+  for (let i = 0; i < roleList.length - 1; i++) {
+    for (let j = i + 1; j < roleList.length; j++) {
       count = 0
       for (let k = 0; k < interactionList.length; k++) {
-        if ((interactionList[k].initiator == participantList[i] || interactionList[k].initiator == participantList[j]) && (interactionList[k].receiver == participantList[i] || interactionList[k].receiver == participantList[j])) {
+        if ((interactionList[k].initiator == roleList[i] || interactionList[k].initiator == roleList[j]) && (interactionList[k].receiver == roleList[i] || interactionList[k].receiver == roleList[j])) {
           count++;
         }
       }
@@ -42,18 +42,18 @@ const getDiversityIndex = (interactionList, participantList) => {
   return total * -1
 }
 
-const getIIRatio = async (interactionList, participantList) => {
+const getIIRatio = async (interactionList, roleList) => {
   let ratio = 0;
 
-  const res = await fetch(`/api/participants`)
-  const participantObjList = await res.json()
-  let participantSection = {}
-  participantObjList.forEach(p => {
-    participantSection[p.name] = p.code.charAt(0);
+  const res = await fetch(`/api/roles`)
+  const roleObjList = await res.json()
+  let roleSection = {}
+  roleObjList.forEach(p => {
+    roleSection[p.name] = p.code.charAt(0);
   });
 
   interactionList.forEach(i => {
-    if (participantSection[i.initiator] == participantSection[i.receiver]) {
+    if (roleSection[i.initiator] == roleSection[i.receiver]) {
       ratio++;
     }
   });
@@ -73,10 +73,10 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
   let charts = (<></>);
 
   const totalInteractions = props.data.length;
-  let participantCount = {}
-  let participantList = Array.from(new Set(props.data.map(d => d.initiator).concat(props.data.map(d => d.receiver))))
-  participantList.forEach(p => { participantCount[p.toString()] = 0 });
-  let participantsPieChartDatapoints = []
+  let roleCount = {}
+  let roleList = Array.from(new Set(props.data.map(d => d.initiator).concat(props.data.map(d => d.receiver))))
+  roleList.forEach(p => { roleCount[p.toString()] = 0 });
+  let rolesPieChartDatapoints = []
   
   let durationList = props.data.map(d => d.duration)
   
@@ -86,8 +86,8 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
   let technologyPieChartDatapoints = []
 
   for (let i = 0; i < props.data.length; i++) {
-    participantCount[props.data[i].initiator] += 1
-    participantCount[props.data[i].receiver] += 1
+    roleCount[props.data[i].initiator] += 1
+    roleCount[props.data[i].receiver] += 1
     technologyCount[props.data[i].technology] += 1
   }
 
@@ -118,9 +118,9 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
       label: t
     })
   }
-  for (let p in participantCount) {
-    participantsPieChartDatapoints.push({
-      y: Math.round(participantCount[p]*10000/totalInteractions)/100,
+  for (let p in roleCount) {
+    rolesPieChartDatapoints.push({
+      y: Math.round(roleCount[p]*10000/totalInteractions)/100,
       label: p
     })
   }
@@ -217,7 +217,7 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
     }]
   }
 
-  const participantsPieChart = {
+  const rolesPieChart = {
     theme: "light2",
     exportEnabled: true,
     animationEnabled: true,
@@ -233,7 +233,7 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
       legendText: "{label}",
       indexLabelFontSize: 16,
       indexLabel: "{label} - {y}%",
-      dataPoints: participantsPieChartDatapoints
+      dataPoints: rolesPieChartDatapoints
     }]
   }
 
@@ -246,7 +246,7 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
           <CanvasJSChart options = {TechnologyPieChart}/>
         </Col>
         <Col sm="5" style={{ margin: "1em" }}>
-          <CanvasJSChart options = {participantsPieChart}/>
+          <CanvasJSChart options = {rolesPieChart}/>
         </Col>
         <Col sm="5" style={{ margin: "1em" }}>
           <CanvasJSChart options = {siilEpisodeLengthOptions}/>
@@ -274,7 +274,7 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
             <tbody>
               <tr>
                 <td>Roles</td>
-                <td>{participantList.length}</td>
+                <td>{roleList.length}</td>
               </tr>
               <tr>
                 <td>Technologies</td>

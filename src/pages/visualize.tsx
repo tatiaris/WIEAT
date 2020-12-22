@@ -15,8 +15,8 @@ const VisualizePage = (): React.ReactNode => {
   const [episode, setEpisode] = useState('');
 
   const visualize_data = (data) => {
-    setParticipantColors(generateColorDict(data))
-    setCopyParticipantColors(generateColorDict(data))
+    setRoleColors(generateColorDict(data))
+    setCopyRoleColors(generateColorDict(data))
     setContent(data);
   };
 
@@ -85,23 +85,23 @@ const VisualizePage = (): React.ReactNode => {
     };
   };
 
-  const [participantColors, setParticipantColors] = useState<colorDict | null>(
+  const [roleColors, setRoleColors] = useState<colorDict | null>(
     generateColorDict({})
   );
-  const [copyParticipantColors, setCopyParticipantColors] = useState<colorDict | null>(
+  const [copyRoleColors, setCopyRoleColors] = useState<colorDict | null>(
     generateColorDict({})
   );
 
   const handleColorChange = (clabel, newColor) => {
-    let newParticipantColors = {colors: {}};
-    for (let p in participantColors.colors) {
+    let newRoleColors = {colors: {}};
+    for (let p in roleColors.colors) {
       if (p == clabel) {
-        newParticipantColors.colors[p] = newColor;
+        newRoleColors.colors[p] = newColor;
       } else {
-        newParticipantColors.colors[p] = participantColors.colors[p];
+        newRoleColors.colors[p] = roleColors.colors[p];
       }
     }
-    setParticipantColors(newParticipantColors);
+    setRoleColors(newRoleColors);
   };
 
   return (
@@ -109,7 +109,7 @@ const VisualizePage = (): React.ReactNode => {
       <Mheader title={"Visualize"}/>
       <Mnavbar theme={"dark"}/>
       <Col style={{marginTop: "1em"}}>
-        <h3>Poster Visualization</h3>
+        <h3>Episode Visualization</h3>
         <Form.Group>
           <span>Sample files: </span>
           <a href="/files/sample.csv">csv</a>,{" "}
@@ -130,11 +130,11 @@ const VisualizePage = (): React.ReactNode => {
         </Form>
         <InputContainer
           colorUpdateFunc={handleColorChange}
-          colorDict={copyParticipantColors}
+          colorDict={copyRoleColors}
           visualizeFunc={visualize_data}
         ></InputContainer>
         <PosterContainer
-          colorDict={participantColors}
+          colorDict={roleColors}
           content={inpContent}
         ></PosterContainer>
       </Col>

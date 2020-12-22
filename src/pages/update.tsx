@@ -18,23 +18,23 @@ const Update = (): React.ReactNode => {
   const [showNotif, setShowNotif] = useState(false);
   const toggleShowNotif = () => setShowNotif(!showNotif);
   const [toastBody, setToastBody] = useState((<></>));
-  const [participants, setParticipants] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [technologies, setTechnologies] = useState([]);
   const technologiesOptions = technologies.map((t, i) => (
     <option key={`technology-option-${i}`}>{t}</option>
   ))
-  const participantOptions = participants.map((p, i) => (
-    <option key={`participant-option-${i}`}>{p}</option>
+  const roleOptions = roles.map((p, i) => (
+    <option key={`role-option-${i}`}>{p}</option>
   ))
   const { handleSubmit, register, errors } = useForm();
-  const loadParticipantNames = async () => {
-    const res = await fetch(`/api/participants`)
+  const loadRoleNames = async () => {
+    const res = await fetch(`/api/roles`)
     const json = await res.json()
-    let participantNames = []
+    let roleNames = []
     for (let i = 0; i < json.length; i++) {
-      participantNames.push(json[i].name)
+      roleNames.push(json[i].name)
     }
-    setParticipants(participantNames)
+    setRoles(roleNames)
   }
   const loadTechnologyNames = async () => {
     const res = await fetch(`/api/technologies`)
@@ -149,7 +149,7 @@ const Update = (): React.ReactNode => {
   }, [selectedInteraction])
 
   useEffect(()=>{
-    loadParticipantNames();
+    loadRoleNames();
     loadTechnologyNames();
   }, [])
 
@@ -236,7 +236,7 @@ const Update = (): React.ReactNode => {
                 validate: value => (value !== receiverValue && value !== defaultInitiatorValue) || "please choose a valid initiator"
               })}>
                 <option>{defaultInitiatorValue}</option>
-                {participantOptions}
+                {roleOptions}
               </Form.Control>
               <InputErrMsg message={errors.initiator && errors.initiator.message}></InputErrMsg>
             </Form.Group>
@@ -247,7 +247,7 @@ const Update = (): React.ReactNode => {
                 validate: value => (value !== initiatorValue && value !== defaultReceiverValue) || "please choose a valid receiver"
               })}>
                 <option>{defaultReceiverValue}</option>
-                {participantOptions}
+                {roleOptions}
               </Form.Control>
               <InputErrMsg message={errors.receiver && errors.receiver.message}></InputErrMsg>
             </Form.Group>

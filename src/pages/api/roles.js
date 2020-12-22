@@ -21,7 +21,7 @@ handler.post(async (req, res) => {
   console.log("inserted data", data);
 
   res.json({
-    insertedDataType: "Participant",
+    insertedDataType: "Role",
     message: "success",
     data: data
   });

@@ -18,26 +18,26 @@ const EntryPage = (): React.ReactNode => {
   const [showNotif, setShowNotif] = useState(false);
   const toggleShowNotif = () => setShowNotif(!showNotif);
   const [toastBody, setToastBody] = useState((<></>));
-  const [participants, setParticipants] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [technologies, setTechnologies] = useState([]);
   const technologiesOptions = technologies.map((t, i) => (
     <option key={`technology-option-${i}`}>{t}</option>
   ))
-  const participantOptions = participants.map((p, i) => (
-    <option key={`participant-option-${i}`}>{p}</option>
+  const roleOptions = roles.map((p, i) => (
+    <option key={`role-option-${i}`}>{p}</option>
   ))
   const { handleSubmit, register, errors } = useForm();
-  const { handleSubmit: handleParticipantSubmit, register: registerParticipant, errors: errorsParticipant } = useForm();
+  const { handleSubmit: handleRoleSubmit, register: registerRole, errors: errorsRole } = useForm();
   const { handleSubmit: handleTechnologySubmit, register: registerTechnology, errors: errorsTechnology } = useForm();
   
-  const loadParticipantNames = async () => {
-    const res = await fetch(`/api/participants`)
+  const loadRoleNames = async () => {
+    const res = await fetch(`/api/roles`)
     const json = await res.json()
-    let participantNames = []
+    let roleNames = []
     for (let i = 0; i < json.length; i++) {
-      participantNames.push(json[i].name)
+      roleNames.push(json[i].name)
     }
-    setParticipants(participantNames)
+    setRoles(roleNames)
   }
 
   const loadTechnologyNames = async () => {
@@ -83,10 +83,10 @@ const EntryPage = (): React.ReactNode => {
     addInteraction(data);
   }
 
-  const onParticipantFormSubmit = async (participantData) => {
-    const res = await fetch('/api/participants', {
+  const onRoleFormSubmit = async (roleData) => {
+    const res = await fetch('/api/roles', {
       method: 'post',
-      body: JSON.stringify(participantData)
+      body: JSON.stringify(roleData)
     }).then (
       response => response.json()
     ).catch((e) => {});
@@ -100,7 +100,7 @@ const EntryPage = (): React.ReactNode => {
       setInsertedDataType(res.insertedDataType)
       setShowNotif(true)
     } else {
-      console.log('participant could not be added')
+      console.log('role could not be added')
     }
   }
 
@@ -143,7 +143,7 @@ const EntryPage = (): React.ReactNode => {
   }, [startTime, endTime]);
 
   useEffect(()=>{
-    loadParticipantNames();
+    loadRoleNames();
     loadTechnologyNames();
   }, [])
 
@@ -192,7 +192,7 @@ const EntryPage = (): React.ReactNode => {
                 validate: value => (value !== receiverValue && value !== defaultInitiatorValue) || "please choose a valid initiator"
               })}>
                 <option>{defaultInitiatorValue}</option>
-                {participantOptions}
+                {roleOptions}
               </Form.Control>
               <InputErrMsg message={errors.initiator && errors.initiator.message}></InputErrMsg>
             </Form.Group>
@@ -203,7 +203,7 @@ const EntryPage = (): React.ReactNode => {
                 validate: value => (value !== initiatorValue && value !== defaultReceiverValue) || "please choose a valid receiver"
               })}>
                 <option>{defaultReceiverValue}</option>
-                {participantOptions}
+                {roleOptions}
               </Form.Control>
               <InputErrMsg message={errors.receiver && errors.receiver.message}></InputErrMsg>
             </Form.Group>
@@ -248,29 +248,29 @@ const EntryPage = (): React.ReactNode => {
       </Col>
       <Row style={{margin: "2em 0em 2em 0em"}}>
         <Col style={{marginTop: "1em"}}>
-          <h3>Participant Entry</h3>
-          <Form onSubmit={handleParticipantSubmit(onParticipantFormSubmit)}>
+          <h3>Role Entry</h3>
+          <Form onSubmit={handleRoleSubmit(onRoleFormSubmit)}>
             <Form.Group>
               <Form.Label>Full Name</Form.Label>
-              <Form.Control name="full_name" ref={registerParticipant({ required: "Required" })} type="text" placeholder='ex: Field Observer' />
-              <InputErrMsg message={errorsParticipant.full_name && errorsParticipant.full_name.message}></InputErrMsg>
+              <Form.Control name="full_name" ref={registerRole({ required: "Required" })} type="text" placeholder='ex: Field Observer' />
+              <InputErrMsg message={errorsRole.full_name && errorsRole.full_name.message}></InputErrMsg>
             </Form.Group>
             <Form.Group>
               <Form.Label>Abbreviation</Form.Label>
-              <Form.Control name="name" ref={registerParticipant({ required: "Required" })} type="text" placeholder='ex: FOB' />
-              <InputErrMsg message={errorsParticipant.name && errorsParticipant.name.message}></InputErrMsg>
+              <Form.Control name="name" ref={registerRole({ required: "Required" })} type="text" placeholder='ex: FOB' />
+              <InputErrMsg message={errorsRole.name && errorsRole.name.message}></InputErrMsg>
             </Form.Group>
             <Form.Group>
               <Form.Label>Code</Form.Label>
-              <Form.Control name="code" ref={registerParticipant({ required: "Required" })} type="text" placeholder='ex: 143' />
-              <InputErrMsg message={errorsParticipant.code && errorsParticipant.code.message}></InputErrMsg>
+              <Form.Control name="code" ref={registerRole({ required: "Required" })} type="text" placeholder='ex: 143' />
+              <InputErrMsg message={errorsRole.code && errorsRole.code.message}></InputErrMsg>
             </Form.Group>
             <Form.Group>
               <Form.Label>Color</Form.Label>
-              <Form.Control name="color" ref={registerParticipant} type="color" defaultValue="#ffffff" />
+              <Form.Control name="color" ref={registerRole} type="color" defaultValue="#ffffff" />
             </Form.Group>
             <Button variant="primary" type="submit">
-              Submit Participant
+              Submit Role
             </Button>
           </Form>
         </Col>
