@@ -27,3 +27,53 @@ tr td a:hover, a:active {
 tr td a {
     color: #ccd0d5 !important;
 }
+
+li {
+  display: list-item;
+  list-style-type: "—";
+  padding-inline-start: 1ch;
+}
+
+.nav-current-page {
+  color: white !important;
+}
+
+.hp-banner {
+  margin: 0;
+  padding: 12em 10em;
+  background-color: #343a40;
+  color: white;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 85%);
+}
+
+.hp-entry-section {
+  margin: 0;
+  padding: 5em 10em;
+}
+
+.hp-visualize-section {
+  margin: 0;
+  padding: 12em 10em;
+  background-color: #343a40;
+  color: white;
+  clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 85%);
+}
+
+@media (max-width: 950px) {
+  img {
+    margin: 2em 0;
+  }
+  .hp-banner {
+    padding: 5em 0;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 95%);
+  }
+  
+  .hp-entry-section {
+    padding: 5em 0;
+  }
+  
+  .hp-visualize-section {
+    padding: 10em 0;
+    clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%);
+  }
+}

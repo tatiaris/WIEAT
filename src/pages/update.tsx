@@ -53,9 +53,7 @@ const Update = (): React.ReactNode => {
     return t[2] + t[1]*60 + t[0]*3600
   }
 
-
-
-  const [episode, setEpisode] = useState('undetermined');
+  const [episode, setEpisode] = useState('Initial Field Report - 1st Observation');
   const [interactions, setInteractions] = useState([]);
   const [selectedInteraction, setSelectedInteraction] = useState({
     "_id":"",
@@ -156,14 +154,14 @@ const Update = (): React.ReactNode => {
   return (
     <>
         <Mheader title={"Update"}/>
-        <Mnavbar theme={"dark"}/>
+        <Mnavbar theme={"dark"} page="Update"/>
         <Col style={{ marginTop: "1em" }}>
           <h3>Update Interaction</h3>
           <Form style={{ borderBottom: "1px solid black" }} onSubmit={handleEpisodeUpdate}>
             <Form.Group as={Row}>
               <Form.Label column sm="1">Episode Title:</Form.Label>
               <Col sm="4">
-                <Form.Control onChange={e => setEpisode(e.target.value)} type="text" placeholder="ex: Initial Field Report - 1st Observation" required />
+                <Form.Control onChange={e => setEpisode(e.target.value)} type="text" defaultValue="Initial Field Report - 1st Observation" placeholder="ex: Initial Field Report - 1st Observation" required />
               </Col>
               <Col sm="1">
                 <Button variant="primary" type="submit">Submit</Button>

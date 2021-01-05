@@ -8,7 +8,7 @@ const Faq = (): React.ReactNode => {
   return (
     <>
         <Mheader title={"FAQ"}/>
-        <Mnavbar theme={"dark"}/>
+        <Mnavbar theme={"dark"} page="FAQ"/>
         <WordCloud interactions={{}}></WordCloud>
         <MFooter/>
     </>

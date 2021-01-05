@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 
 export const StyledEpisode = styled.div`
-  margin-bottom: 100px;
+  padding-bottom: 100px;
+  overflow-x: scroll;
 `;
 
 export const EpisodeTitle = styled.h3`

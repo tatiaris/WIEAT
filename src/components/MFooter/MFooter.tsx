@@ -7,7 +7,7 @@ import { Container, Row, Col, Button, Table } from "react-bootstrap";
 export const MFooter: React.FC = () => {
   return (
     <>
-      <footer style={{ color: "white", marginTop: "1em" }}>
+      <footer style={{ color: "white" }}>
         <Container fluid style={{ padding: "2em 1em", background: "#343a40" }}>
           <Row className="justify-content-md-center">
             <Col sm="2">
@@ -21,7 +21,7 @@ export const MFooter: React.FC = () => {
                   <tr style={{ fontSize: "1.2em" }}>
                     <th>Explore</th>
                     <th>Features</th>
-                    <th>Contact Us</th>
+                    <th>Contact</th>
                   </tr>
                 </thead>
                 <tbody>

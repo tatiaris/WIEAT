@@ -12,7 +12,7 @@ interface colorDict {
 
 const VisualizePage = (): React.ReactNode => {
   const [inpContent, setContent] = useState({});
-  const [episode, setEpisode] = useState('');
+  const [episode, setEpisode] = useState('Initial Field Report - 1st Observation');
 
   const visualize_data = (data) => {
     setRoleColors(generateColorDict(data))
@@ -107,7 +107,7 @@ const VisualizePage = (): React.ReactNode => {
   return (
     <>
       <Mheader title={"Visualize"}/>
-      <Mnavbar theme={"dark"}/>
+      <Mnavbar theme={"dark"} page="Visualize"/>
       <Col style={{marginTop: "1em"}}>
         <h3>Episode Visualization</h3>
         <Form.Group>
@@ -121,7 +121,7 @@ const VisualizePage = (): React.ReactNode => {
           <Form.Group as={Row}>
             <Form.Label column sm="1">Episode Title:</Form.Label>
             <Col sm="4">
-              <Form.Control onChange={e => setEpisode(e.target.value)} type="text" placeholder="ex: Initial Field Report - 1st Observation" required />
+              <Form.Control onChange={e => setEpisode(e.target.value)} type="text" defaultValue="Initial Field Report - 1st Observation" placeholder="ex: Initial Field Report - 1st Observation" required />
             </Col>
             <Col sm="1">
               <Button variant="primary" type="submit">Submit</Button>

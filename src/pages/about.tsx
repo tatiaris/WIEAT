@@ -7,7 +7,7 @@ const About = (): React.ReactNode => {
   return (
     <>
         <Mheader title={"About"}/>
-        <Mnavbar theme={"dark"}/>
+        <Mnavbar theme={"dark"} page="About"/>
         <MFooter/>
     </>
   );

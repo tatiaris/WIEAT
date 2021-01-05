@@ -1,11 +1,12 @@
 import { ObjectID } from "mongodb";
 import nextConnect from "next-connect";
-import { createAwait } from "typescript";
 import middleware from "../../../middleware/database";
+import cors from "cors"
 
 const handler = nextConnect();
 
 handler.use(middleware);
+handler.use(cors())
 
 handler.get(async (req, res) => {
   const episode = req.query.episode;

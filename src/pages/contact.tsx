@@ -7,7 +7,7 @@ const Contact = (): React.ReactNode => {
   return (
     <>
         <Mheader title={"Contact"}/>
-        <Mnavbar theme={"dark"}/>
+        <Mnavbar theme={"dark"} page="Contact"/>
         <MFooter/>
     </>
   );

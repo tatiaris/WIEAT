@@ -13,6 +13,7 @@ export interface MheaderProps {
 
 export interface MnavbarProps {
   theme: "light" | "dark";
+  page: string;
 }
 
 export interface PosterProps {

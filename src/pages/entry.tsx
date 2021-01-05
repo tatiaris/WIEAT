@@ -150,7 +150,7 @@ const EntryPage = (): React.ReactNode => {
   return (
     <>
       <Mheader title={"Entry"}/>
-      <Mnavbar theme={"dark"}/>
+      <Mnavbar theme={"dark"} page="Entry"/>
       <Col style={{marginTop: "1em"}}>
         <h3>Interaction Entry</h3>
         <Form onSubmit={handleSubmit(onInteractionFormSubmit)}>
